@@ -1,5 +1,6 @@
 package com.vehiclerental.stepdefinitions;
 
+import com.vehiclerental.repository.ManagerRepository;
 import com.vehiclerental.service.LoginService;
 import io.cucumber.java.en.*;
 
@@ -7,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginSteps {
 
-    private final LoginService loginService = new LoginService();
-
+    private final LoginService loginService =
+            new LoginService(new ManagerRepository());
     private String username;
     private String password;
     private boolean loginResult;

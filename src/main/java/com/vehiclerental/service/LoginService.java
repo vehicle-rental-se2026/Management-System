@@ -7,10 +7,10 @@ public class LoginService {
 
     private final ManagerRepository managerRepository;
 
-    public LoginService() {
-        managerRepository = new ManagerRepository();
-    }
 
+    public LoginService(ManagerRepository managerRepository) {
+        this.managerRepository = managerRepository;
+    }
     public boolean login(String username, String password) {
 
         Manager manager = managerRepository.getManager();

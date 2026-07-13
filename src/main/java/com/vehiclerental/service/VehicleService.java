@@ -10,10 +10,9 @@ public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
 
-    public VehicleService() {
-        vehicleRepository = new VehicleRepository();
+    public VehicleService(VehicleRepository vehicleRepository) {
+        this.vehicleRepository = vehicleRepository;
     }
-
     public List<Vehicle> getAvailableVehicles() {
 
         List<Vehicle> availableVehicles = new ArrayList<>();

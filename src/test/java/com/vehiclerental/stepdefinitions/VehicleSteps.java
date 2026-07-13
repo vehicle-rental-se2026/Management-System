@@ -1,6 +1,7 @@
 package com.vehiclerental.stepdefinitions;
 
 import com.vehiclerental.domain.Vehicle;
+import com.vehiclerental.repository.VehicleRepository;
 import com.vehiclerental.service.VehicleService;
 import io.cucumber.java.en.*;
 
@@ -10,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class VehicleSteps {
 
-    private final VehicleService vehicleService = new VehicleService();
-
+    private final VehicleService vehicleService =
+            new VehicleService(new VehicleRepository());
     private List<Vehicle> vehicles;
 
     @Given("the vehicle list exists")

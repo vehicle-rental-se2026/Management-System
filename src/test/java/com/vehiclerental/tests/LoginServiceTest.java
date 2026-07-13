@@ -1,5 +1,6 @@
 package com.vehiclerental.tests;
 
+import com.vehiclerental.repository.ManagerRepository;
 import com.vehiclerental.service.LoginService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ class LoginServiceTest {
 
     @BeforeEach
     void setUp() {
-        loginService = new LoginService();
+        loginService = new LoginService(new ManagerRepository());
     }
 
     @Test

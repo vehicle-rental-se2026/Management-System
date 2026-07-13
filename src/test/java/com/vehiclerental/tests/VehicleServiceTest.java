@@ -1,6 +1,7 @@
 package com.vehiclerental.tests;
 
 import com.vehiclerental.domain.Vehicle;
+import com.vehiclerental.repository.VehicleRepository;
 import com.vehiclerental.service.VehicleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,7 @@ class VehicleServiceTest {
 
     @BeforeEach
     void setUp() {
-        vehicleService = new VehicleService();
-    }
+        vehicleService = new VehicleService(new VehicleRepository());    }
 
     @Test
     void testGetAvailableVehicles() {
