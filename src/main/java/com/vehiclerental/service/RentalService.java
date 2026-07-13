@@ -2,14 +2,19 @@ package com.vehiclerental.service;
 
 import com.vehiclerental.domain.Rental;
 import com.vehiclerental.domain.Vehicle;
+import com.vehiclerental.notification.NotificationService;
 import com.vehiclerental.repository.RentalRepository;
 
 public class RentalService {
 
     private final RentalRepository rentalRepository;
+    private final NotificationService notificationService;
 
-    public RentalService() {
-        rentalRepository = new RentalRepository();
+    public RentalService(NotificationService notificationService) {
+
+        this.rentalRepository = new RentalRepository();
+        this.notificationService = notificationService;
+
     }
 
     public boolean rentVehicle(Vehicle vehicle, int rentalDays) {
@@ -31,6 +36,14 @@ public class RentalService {
         return true;
     }
 
+    public void sendRentalReminder(Vehicle vehicle) {
+
+        notificationService.sendReminder(
+                "Rental for " + vehicle.getBrand() + " " + vehicle.getModel() + " is about to expire."
+        );
+
+    }
+
     public void returnVehicle(Vehicle vehicle) {
         vehicle.setAvailable(true);
     }
@@ -38,4 +51,5 @@ public class RentalService {
     public boolean isVehicleRented(Vehicle vehicle) {
         return !vehicle.isAvailable();
     }
+
 }

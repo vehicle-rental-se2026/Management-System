@@ -1,13 +1,14 @@
 package com.vehiclerental.tests;
 
 import com.vehiclerental.domain.Vehicle;
+import com.vehiclerental.notification.EmailNotificationService;
 import com.vehiclerental.service.RentalService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RentalServiceTest {
+public class RentalServiceTest {
 
     private RentalService rentalService;
     private Vehicle vehicle;
@@ -15,7 +16,7 @@ class RentalServiceTest {
     @BeforeEach
     void setUp() {
 
-        rentalService = new RentalService();
+        rentalService = new RentalService(new EmailNotificationService());
 
         vehicle = new Vehicle(
                 1,
@@ -32,7 +33,6 @@ class RentalServiceTest {
 
         assertTrue(result);
         assertFalse(vehicle.isAvailable());
-
     }
 
     @Test
@@ -43,7 +43,6 @@ class RentalServiceTest {
         boolean result = rentalService.rentVehicle(vehicle, 3);
 
         assertFalse(result);
-
     }
 
     @Test
@@ -52,7 +51,6 @@ class RentalServiceTest {
         boolean result = rentalService.rentVehicle(vehicle, -1);
 
         assertFalse(result);
-
     }
 
     @Test
@@ -63,6 +61,5 @@ class RentalServiceTest {
         rentalService.returnVehicle(vehicle);
 
         assertTrue(vehicle.isAvailable());
-
     }
 }
