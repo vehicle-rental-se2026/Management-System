@@ -8,6 +8,6 @@ Feature: Manager Login
 
   Scenario: Invalid Login
     Given the manager username is "admin"
-    And the manager password is "1111"
+    And the manager password is "0000"
     When the manager logs in
     Then the login should fail

@@ -1,7 +1,6 @@
 Feature: Rental Reminder
 
   Scenario: Send rental reminder
-
-    Given a rented vehicle
-    When the rental reminder is generated
-    Then a reminder should be sent
+    Given a rented vehicle is close to expiry
+    When the reminder is sent
+    Then the notification should be generated

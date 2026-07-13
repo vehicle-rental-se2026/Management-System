@@ -1,7 +1,7 @@
 Feature: Prevent Double Booking
 
-  Scenario: Rent already rented vehicle
-
-    Given a vehicle is already rented
-    When the manager tries to rent the same vehicle
+  Scenario: Prevent renting the same vehicle twice
+    Given an available vehicle exists
+    When the manager rents the vehicle for 5 days
+    And the manager rents the vehicle for 3 days
     Then the rental should be rejected

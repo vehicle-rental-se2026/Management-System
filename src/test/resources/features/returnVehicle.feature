@@ -1,7 +1,6 @@
 Feature: Return Vehicle
 
-  Scenario: Return rented vehicle
-
+  Scenario: Return a rented vehicle
     Given a rented vehicle exists
     When the manager returns the vehicle
     Then the vehicle becomes available

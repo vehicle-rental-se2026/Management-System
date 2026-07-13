@@ -1,8 +1,8 @@
 package com.vehiclerental.stepdefinitions;
 
-import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.notification.EmailNotificationService;
 import com.vehiclerental.service.RentalService;
+import com.vehiclerental.vehicletype.Car;
 import io.cucumber.java.en.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,48 +10,27 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RentalSteps {
 
     private RentalService rentalService;
-    private Vehicle vehicle;
+    private Car car;
     private boolean result;
 
-    @Given("a vehicle is available")
-    public void aVehicleIsAvailable() {
+    @Given("an available vehicle exists")
+    public void anAvailableVehicleExists() {
 
         rentalService = new RentalService(new EmailNotificationService());
 
-        vehicle = new Vehicle(
-                1,
-                "Toyota",
-                "Corolla",
-                true
-        );
-    }
-
-    @Given("a vehicle is already rented")
-    public void aVehicleIsAlreadyRented() {
-
-        rentalService = new RentalService(new EmailNotificationService());
-
-        vehicle = new Vehicle(
+        car = new Car(
                 1,
                 "Toyota",
                 "Corolla",
                 true
         );
 
-        rentalService.rentVehicle(vehicle, 5);
     }
 
     @When("the manager rents the vehicle for {int} days")
-    public void theManagerRentsTheVehicleForDays(int days) {
+    public void theManagerRentsTheVehicleForDays(Integer days) {
 
-        result = rentalService.rentVehicle(vehicle, days);
-
-    }
-
-    @When("the manager tries to rent the same vehicle")
-    public void theManagerTriesToRentTheSameVehicle() {
-
-        result = rentalService.rentVehicle(vehicle, 5);
+        result = rentalService.rentVehicle(car, days);
 
     }
 
@@ -65,7 +44,7 @@ public class RentalSteps {
     @Then("the vehicle should become unavailable")
     public void theVehicleShouldBecomeUnavailable() {
 
-        assertFalse(vehicle.isAvailable());
+        assertFalse(car.isAvailable());
 
     }
 
@@ -76,10 +55,4 @@ public class RentalSteps {
 
     }
 
-    @Then("the rental should fail")
-    public void theRentalShouldFail() {
-
-        assertFalse(result);
-
-    }
 }

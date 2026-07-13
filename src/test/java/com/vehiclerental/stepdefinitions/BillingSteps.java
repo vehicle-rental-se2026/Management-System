@@ -2,10 +2,12 @@ package com.vehiclerental.stepdefinitions;
 
 import com.vehiclerental.billing.BillingService;
 import com.vehiclerental.domain.Rental;
-import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.notification.EmailNotificationService;
 import com.vehiclerental.service.RentalService;
-import io.cucumber.java.en.*;
+import com.vehiclerental.vehicletype.Car;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,8 +15,9 @@ public class BillingSteps {
 
     private RentalService rentalService;
     private BillingService billingService;
+
     private Rental rental;
-    private Vehicle vehicle;
+    private Car car;
 
     private double totalCost;
     private double penalty;
@@ -25,10 +28,14 @@ public class BillingSteps {
         rentalService = new RentalService(new EmailNotificationService());
         billingService = new BillingService();
 
-        vehicle = new Vehicle(1, "Toyota", "Corolla", false);
+        car = new Car(
+                1,
+                "Toyota",
+                "Corolla",
+                false
+        );
 
-        rental = new Rental(vehicle, 5);
-
+        rental = new Rental(car, 5);
     }
 
     @When("the manager returns the vehicle")
@@ -41,7 +48,7 @@ public class BillingSteps {
     @Then("the vehicle becomes available")
     public void theVehicleBecomesAvailable() {
 
-        assertTrue(vehicle.isAvailable());
+        assertTrue(car.isAvailable());
 
     }
 

@@ -1,9 +1,9 @@
 package com.vehiclerental.tests;
 
 import com.vehiclerental.domain.Rental;
-import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.notification.EmailNotificationService;
 import com.vehiclerental.service.RentalService;
+import com.vehiclerental.vehicletype.Car;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,38 +12,37 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RentalServiceTest {
 
     private RentalService rentalService;
-    private Vehicle vehicle;
+    private Car car;
 
     @BeforeEach
     void setUp() {
 
         rentalService = new RentalService(new EmailNotificationService());
 
-        vehicle = new Vehicle(
+        car = new Car(
                 1,
                 "Toyota",
                 "Corolla",
                 true
         );
-
     }
 
     @Test
     void testRentVehicleSuccessfully() {
 
-        boolean result = rentalService.rentVehicle(vehicle, 5);
+        boolean result = rentalService.rentVehicle(car, 5);
 
         assertTrue(result);
-        assertFalse(vehicle.isAvailable());
+        assertFalse(car.isAvailable());
 
     }
 
     @Test
     void testPreventDoubleBooking() {
 
-        rentalService.rentVehicle(vehicle, 5);
+        rentalService.rentVehicle(car, 5);
 
-        boolean result = rentalService.rentVehicle(vehicle, 3);
+        boolean result = rentalService.rentVehicle(car, 3);
 
         assertFalse(result);
 
@@ -52,7 +51,7 @@ public class RentalServiceTest {
     @Test
     void testRejectInvalidRentalDuration() {
 
-        boolean result = rentalService.rentVehicle(vehicle, -1);
+        boolean result = rentalService.rentVehicle(car, -1);
 
         assertFalse(result);
 
@@ -61,13 +60,13 @@ public class RentalServiceTest {
     @Test
     void testReturnVehicle() {
 
-        Rental rental = new Rental(vehicle, 5);
+        Rental rental = new Rental(car, 5);
 
-        vehicle.setAvailable(false);
+        car.setAvailable(false);
 
         rentalService.returnVehicle(rental);
 
-        assertTrue(vehicle.isAvailable());
+        assertTrue(car.isAvailable());
         assertFalse(rental.isActive());
 
     }

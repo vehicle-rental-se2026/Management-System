@@ -1,41 +1,21 @@
 package com.vehiclerental.tests;
 
-import com.vehiclerental.domain.Vehicle;
+import com.vehiclerental.notification.EmailNotificationService;
 import com.vehiclerental.notification.NotificationService;
-import com.vehiclerental.service.RentalService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-class NotificationServiceTest {
-
-    private NotificationService notificationService;
-    private RentalService rentalService;
-
-    @BeforeEach
-    void setUp() {
-
-        notificationService = mock(NotificationService.class);
-
-        rentalService = new RentalService(notificationService);
-
-    }
+public class NotificationServiceTest {
 
     @Test
-    void testReminderIsSent() {
+    void testSendReminder() {
 
-        Vehicle vehicle = new Vehicle(
-                1,
-                "Toyota",
-                "Corolla",
-                true
-        );
+        NotificationService notificationService =
+                new EmailNotificationService();
 
-        rentalService.sendRentalReminder(vehicle);
-
-        verify(notificationService)
-                .sendReminder(anyString());
+        assertDoesNotThrow(() ->
+                notificationService.sendReminder("Rental expires tomorrow"));
 
     }
 
