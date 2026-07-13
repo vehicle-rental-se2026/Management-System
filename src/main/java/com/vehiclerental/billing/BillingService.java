@@ -1,17 +1,28 @@
 package com.vehiclerental.billing;
 
+import com.vehiclerental.strategy.PricingStrategy;
+import com.vehiclerental.strategy.StandardPricingStrategy;
+
 public class BillingService {
 
-    private static final double DAILY_RATE = 40.0;
-    private static final double TAX_RATE = 0.16;
+    private PricingStrategy pricingStrategy;
+
     private static final double LATE_PENALTY_PER_DAY = 15.0;
 
+    public BillingService() {
+        this.pricingStrategy = new StandardPricingStrategy();
+    }
+
+    public BillingService(PricingStrategy pricingStrategy) {
+        this.pricingStrategy = pricingStrategy;
+    }
+
+    public void setPricingStrategy(PricingStrategy pricingStrategy) {
+        this.pricingStrategy = pricingStrategy;
+    }
+
     public double calculateRentalCost(int rentalDays) {
-
-        double subtotal = rentalDays * DAILY_RATE;
-        double tax = subtotal * TAX_RATE;
-
-        return subtotal + tax;
+        return pricingStrategy.calculatePrice(rentalDays);
     }
 
     public double calculateLatePenalty(int lateDays) {
@@ -27,5 +38,7 @@ public class BillingService {
 
         return calculateRentalCost(rentalDays)
                 + calculateLatePenalty(lateDays);
+
     }
+
 }

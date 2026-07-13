@@ -4,6 +4,9 @@ import com.vehiclerental.billing.BillingService;
 import com.vehiclerental.domain.Rental;
 import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.notification.NotificationService;
+import com.vehiclerental.observer.EmailObserver;
+import com.vehiclerental.observer.InternalNotificationObserver;
+import com.vehiclerental.observer.NotificationManager;
 import com.vehiclerental.repository.RentalRepository;
 
 public class RentalService {
@@ -11,12 +14,18 @@ public class RentalService {
     private final RentalRepository rentalRepository;
     private final NotificationService notificationService;
     private final BillingService billingService;
+    private final NotificationManager notificationManager;
 
     public RentalService(NotificationService notificationService) {
 
-        this.rentalRepository = new RentalRepository();
         this.notificationService = notificationService;
+        this.rentalRepository = new RentalRepository();
         this.billingService = new BillingService();
+
+        this.notificationManager = new NotificationManager();
+
+        notificationManager.addObserver(new EmailObserver());
+        notificationManager.addObserver(new InternalNotificationObserver());
 
     }
 
@@ -36,6 +45,10 @@ public class RentalService {
 
         vehicle.setAvailable(false);
 
+        notificationManager.notifyObservers(
+                "Vehicle rented successfully."
+        );
+
         return true;
     }
 
@@ -45,12 +58,17 @@ public class RentalService {
 
         rental.setActive(false);
 
+        notificationManager.notifyObservers(
+                "Vehicle returned successfully."
+        );
+
     }
 
     public double calculateRentalCost(Rental rental) {
 
-        double total = billingService.calculateRentalCost(
-                rental.getRentalDays());
+        double total =
+                billingService.calculateRentalCost(
+                        rental.getRentalDays());
 
         rental.setTotalCost(total);
 
@@ -65,11 +83,16 @@ public class RentalService {
 
     public void sendRentalReminder(Vehicle vehicle) {
 
-        notificationService.sendReminder(
-                "Rental for " + vehicle.getBrand() + " " +
-                        vehicle.getModel() +
-                        " is about to expire."
-        );
+        String message =
+                "Rental for "
+                        + vehicle.getBrand()
+                        + " "
+                        + vehicle.getModel()
+                        + " is about to expire.";
+
+        notificationService.sendReminder(message);
+
+        notificationManager.notifyObservers(message);
 
     }
 
@@ -78,4 +101,5 @@ public class RentalService {
         return !vehicle.isAvailable();
 
     }
+
 }
