@@ -1,5 +1,6 @@
 package com.vehiclerental.tests;
 
+import com.vehiclerental.domain.Rental;
 import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.notification.EmailNotificationService;
 import com.vehiclerental.service.RentalService;
@@ -24,6 +25,7 @@ public class RentalServiceTest {
                 "Corolla",
                 true
         );
+
     }
 
     @Test
@@ -33,6 +35,7 @@ public class RentalServiceTest {
 
         assertTrue(result);
         assertFalse(vehicle.isAvailable());
+
     }
 
     @Test
@@ -43,6 +46,7 @@ public class RentalServiceTest {
         boolean result = rentalService.rentVehicle(vehicle, 3);
 
         assertFalse(result);
+
     }
 
     @Test
@@ -51,15 +55,21 @@ public class RentalServiceTest {
         boolean result = rentalService.rentVehicle(vehicle, -1);
 
         assertFalse(result);
+
     }
 
     @Test
     void testReturnVehicle() {
 
-        rentalService.rentVehicle(vehicle, 5);
+        Rental rental = new Rental(vehicle, 5);
 
-        rentalService.returnVehicle(vehicle);
+        vehicle.setAvailable(false);
+
+        rentalService.returnVehicle(rental);
 
         assertTrue(vehicle.isAvailable());
+        assertFalse(rental.isActive());
+
     }
+
 }
