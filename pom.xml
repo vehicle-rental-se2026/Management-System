@@ -12,10 +12,12 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>21.0.2</javafx.version>
 
         <junit.version>5.10.2</junit.version>
         <cucumber.version>7.18.1</cucumber.version>
@@ -25,7 +27,20 @@
 
     <dependencies>
 
-        <!-- JUnit 5 -->
+        <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- JUnit -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -33,7 +48,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JUnit Platform Suite -->
+        <!-- JUnit Platform -->
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-suite</artifactId>
@@ -85,6 +100,7 @@
 
         <plugins>
 
+            <!-- Java 17 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -95,12 +111,27 @@
                 </configuration>
             </plugin>
 
+            <!-- JavaFX -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+
+                <configuration>
+                    <mainClass>
+                        com.vehiclerental.presentation.LoginApplication
+                    </mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.3.1</version>
             </plugin>
 
+            <!-- JaCoCo -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -117,9 +148,11 @@
                     <execution>
                         <id>report</id>
                         <phase>test</phase>
+
                         <goals>
                             <goal>report</goal>
                         </goals>
+
                     </execution>
 
                 </executions>
