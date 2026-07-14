@@ -64,6 +64,11 @@ public class Vehicle {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+    @Override
+    public String toString() {
 
+        return id + " - " + brand + " " + model + " (" + vehicleType + ")";
+
+    }
 
 }

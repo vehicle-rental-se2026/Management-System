@@ -8,11 +8,13 @@ import java.util.List;
 
 public class VehicleRepository {
 
-    private final List<Vehicle> vehicles;
+    private static final List<Vehicle> vehicles = new ArrayList<>();
 
     public VehicleRepository() {
 
-        vehicles = new ArrayList<>();
+        if (!vehicles.isEmpty()) {
+            return;
+        }
 
         vehicles.add(new Car(1, "Toyota", "Corolla", true));
         vehicles.add(new Car(2, "Honda", "Civic", true));
@@ -38,7 +40,6 @@ public class VehicleRepository {
 
         vehicles.add(new Van(15, "Toyota", "Hiace", true));
     }
-
     public List<Vehicle> getAllVehicles() {
         return vehicles;
     }

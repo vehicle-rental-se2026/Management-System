@@ -7,17 +7,27 @@ import java.util.List;
 
 public class RentalRepository {
 
-    private final List<Rental> rentals;
+    private static final List<Rental> rentals = new ArrayList<>();
 
     public RentalRepository() {
-        rentals = new ArrayList<>();
     }
 
     public void addRental(Rental rental) {
+
         rentals.add(rental);
+
     }
 
     public List<Rental> getAllRentals() {
+
         return rentals;
+
     }
+
+    public void removeRental(Rental rental) {
+
+        rentals.remove(rental);
+
+    }
+
 }

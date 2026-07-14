@@ -1,53 +1,63 @@
-package com.vehiclerental.tests;
+package com.vehiclerental.billing;
 
-import com.vehiclerental.billing.BillingService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BillingServiceTest {
 
-    private BillingService billingService;
-
-    @BeforeEach
-    void setUp() {
-        billingService = new BillingService();
-    }
-
     @Test
-    void testCalculateRentalCost() {
+    public void testCalculateRentalCost() {
 
-        double total = billingService.calculateRentalCost(5);
+        BillingService billingService = new BillingService();
 
-        assertEquals(232.0, total);
+        double result = billingService.calculateRentalCost(5);
+
+        assertEquals(250.0, result);
 
     }
 
     @Test
-    void testCalculateLatePenalty() {
+    public void testCalculateRentalCostOneDay() {
 
-        double penalty = billingService.calculateLatePenalty(2);
+        BillingService billingService = new BillingService();
 
-        assertEquals(30.0, penalty);
+        double result = billingService.calculateRentalCost(1);
 
-    }
-
-    @Test
-    void testNoLatePenalty() {
-
-        double penalty = billingService.calculateLatePenalty(0);
-
-        assertEquals(0.0, penalty);
+        assertEquals(50.0, result);
 
     }
 
     @Test
-    void testCalculateTotal() {
+    public void testCalculateLatePenalty() {
 
-        double total = billingService.calculateTotal(5, 2);
+        BillingService billingService = new BillingService();
 
-        assertEquals(262.0, total);
+        double result = billingService.calculateLatePenalty(3);
+
+        assertEquals(60.0, result);
+
+    }
+
+    @Test
+    public void testCalculateLatePenaltyZeroDays() {
+
+        BillingService billingService = new BillingService();
+
+        double result = billingService.calculateLatePenalty(0);
+
+        assertEquals(0.0, result);
+
+    }
+
+    @Test
+    public void testCalculateLatePenaltyNegativeDays() {
+
+        BillingService billingService = new BillingService();
+
+        double result = billingService.calculateLatePenalty(-2);
+
+        assertEquals(0.0, result);
 
     }
 

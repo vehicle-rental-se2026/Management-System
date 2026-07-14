@@ -38,5 +38,10 @@ public class Rental {
         this.totalCost = totalCost;
     }
 
+    @Override
+    public String toString() {
 
+        return vehicle.getBrand() + " " + vehicle.getModel();
+
+    }
 }

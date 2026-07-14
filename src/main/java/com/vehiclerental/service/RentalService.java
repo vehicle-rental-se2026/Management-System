@@ -9,6 +9,8 @@ import com.vehiclerental.observer.InternalNotificationObserver;
 import com.vehiclerental.observer.NotificationManager;
 import com.vehiclerental.repository.RentalRepository;
 
+import java.util.List;
+
 public class RentalService {
 
     private final RentalRepository rentalRepository;
@@ -99,6 +101,15 @@ public class RentalService {
     public boolean isVehicleRented(Vehicle vehicle) {
 
         return !vehicle.isAvailable();
+
+    }
+    public List<Rental> getActiveRentals() {
+
+        return rentalRepository
+                .getAllRentals()
+                .stream()
+                .filter(Rental::isActive)
+                .toList();
 
     }
 

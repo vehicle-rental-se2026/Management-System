@@ -12,6 +12,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven.compiler.source>17</maven.compiler.source>
@@ -23,11 +24,13 @@
         <cucumber.version>7.18.1</cucumber.version>
         <mockito.version>5.12.0</mockito.version>
         <jacoco.version>0.8.12</jacoco.version>
+
     </properties>
 
     <dependencies>
 
         <!-- JavaFX -->
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -41,6 +44,7 @@
         </dependency>
 
         <!-- JUnit -->
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -48,7 +52,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JUnit Platform -->
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-suite</artifactId>
@@ -57,6 +60,7 @@
         </dependency>
 
         <!-- Cucumber -->
+
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
@@ -72,6 +76,7 @@
         </dependency>
 
         <!-- Mockito -->
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -87,6 +92,7 @@
         </dependency>
 
         <!-- AssertJ -->
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -100,57 +106,90 @@
 
         <plugins>
 
-            <!-- Java 17 -->
+            <!-- Java Compiler -->
+
             <plugin>
+
                 <groupId>org.apache.maven.plugins</groupId>
+
                 <artifactId>maven-compiler-plugin</artifactId>
+
                 <version>3.13.0</version>
+
                 <configuration>
+
                     <source>17</source>
+
                     <target>17</target>
+
                 </configuration>
+
             </plugin>
 
             <!-- JavaFX -->
+
             <plugin>
+
                 <groupId>org.openjfx</groupId>
+
                 <artifactId>javafx-maven-plugin</artifactId>
+
                 <version>0.0.8</version>
 
                 <configuration>
+
                     <mainClass>
-                        com.vehiclerental.presentation.LoginApplication
+                        com.vehiclerental.presentation.Main
                     </mainClass>
+
                 </configuration>
+
             </plugin>
 
             <!-- Tests -->
+
             <plugin>
+
                 <groupId>org.apache.maven.plugins</groupId>
+
                 <artifactId>maven-surefire-plugin</artifactId>
+
                 <version>3.3.1</version>
+
             </plugin>
 
             <!-- JaCoCo -->
+
             <plugin>
+
                 <groupId>org.jacoco</groupId>
+
                 <artifactId>jacoco-maven-plugin</artifactId>
+
                 <version>${jacoco.version}</version>
 
                 <executions>
 
                     <execution>
+
                         <goals>
+
                             <goal>prepare-agent</goal>
+
                         </goals>
+
                     </execution>
 
                     <execution>
+
                         <id>report</id>
+
                         <phase>test</phase>
 
                         <goals>
+
                             <goal>report</goal>
+
                         </goals>
 
                     </execution>
