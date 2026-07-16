@@ -106,8 +106,6 @@
 
         <plugins>
 
-            <!-- Java Compiler -->
-
             <plugin>
 
                 <groupId>org.apache.maven.plugins</groupId>
@@ -125,8 +123,6 @@
                 </configuration>
 
             </plugin>
-
-            <!-- JavaFX -->
 
             <plugin>
 
@@ -146,8 +142,6 @@
 
             </plugin>
 
-            <!-- Tests -->
-
             <plugin>
 
                 <groupId>org.apache.maven.plugins</groupId>
@@ -156,9 +150,13 @@
 
                 <version>3.3.1</version>
 
-            </plugin>
+                <configuration>
 
-            <!-- JaCoCo -->
+                    <useModulePath>false</useModulePath>
+
+                </configuration>
+
+            </plugin>
 
             <plugin>
 
@@ -172,6 +170,8 @@
 
                     <execution>
 
+                        <id>prepare-agent</id>
+
                         <goals>
 
                             <goal>prepare-agent</goal>
@@ -184,7 +184,7 @@
 
                         <id>report</id>
 
-                        <phase>test</phase>
+                        <phase>verify</phase>
 
                         <goals>
 
