@@ -6,380 +6,362 @@ import com.vehiclerental.service.LoginService;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
 
 public class LoginFrame extends JFrame {
 
+    private static final Color NAVY = new Color(18, 54, 82);
+    private static final Color PAGE_BG = new Color(226, 239, 248);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color TEXT_DARK = new Color(33, 37, 41);
+    private static final Color TEXT_GRAY = new Color(108, 117, 125);
+    private static final Color BLUE = new Color(65, 130, 190);
+    private static final Color RED = new Color(214, 80, 80);
+
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private JCheckBox showPasswordCheckBox;
+    private JLabel messageLabel;
 
     private JButton loginButton;
     private JButton exitButton;
-
-    private JCheckBox showPassword;
 
     private final LoginService loginService =
             new LoginService(new ManagerRepository());
 
     public LoginFrame() {
-
         initializeFrame();
 
-        JPanel mainPanel = new JPanel(new GridLayout(1, 2));
+        JPanel mainPanel = new GradientBackgroundPanel();
+        mainPanel.setLayout(new GridBagLayout());
 
-        JPanel leftPanel = createLeftPanel();
-
-        JPanel rightPanel = createRightPanel();
-
-        mainPanel.add(leftPanel);
-
-        mainPanel.add(rightPanel);
+        mainPanel.add(createLoginCard());
 
         add(mainPanel);
 
         initializeEvents();
 
         setVisible(true);
-
     }
 
     private void initializeFrame() {
-
-        setTitle("SB Car Rental");
-
-        setSize(900, 700);
-
+        setTitle("SB Car Rental - Login");
+        setSize(1000, 720);
         setLocationRelativeTo(null);
-
         setResizable(false);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
     }
 
-    private JPanel createLeftPanel() {
+    private JPanel createLoginCard() {
+        RoundedPanel card = new RoundedPanel(32, CARD_BG);
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setPreferredSize(new Dimension(560, 620));
+        card.setBorder(new EmptyBorder(24, 55, 32, 55));
 
+        card.add(createLogoPanel());
+        card.add(Box.createVerticalStrut(8));
+        card.add(createTitlePanel());
+        card.add(Box.createVerticalStrut(16));
+        card.add(createFormPanel());
+        card.add(Box.createVerticalStrut(18));
+        card.add(createButtonsPanel());
+        card.add(Box.createVerticalStrut(16));
+        card.add(createFooterLabel());
+
+        return card;
+    }
+
+    private JPanel createLogoPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setOpaque(false);
+        panel.setMaximumSize(new Dimension(430, 120));
+        panel.setPreferredSize(new Dimension(430, 120));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel logoLabel = new JLabel(loadLogoIcon(115, 115));
+        panel.add(logoLabel);
+
+        return panel;
+    }
+
+    private JPanel createTitlePanel() {
         JPanel panel = new JPanel();
-
-        panel.setBackground(new Color(15, 76, 129));
-
+        panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        panel.setBorder(new EmptyBorder(35, 30, 35, 30));
-
-        panel.add(Box.createVerticalGlue());
-
-        ImageIcon icon = new ImageIcon(
-                getClass().getResource("/images/logo.png"));
-
-        Image image = icon.getImage().getScaledInstance(
-                280,
-                280,
-                Image.SCALE_SMOOTH);
-
-        JLabel logo = new JLabel(new ImageIcon(image));
-
-        logo.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        panel.add(logo);
-
-        panel.add(Box.createVerticalStrut(25));
+        panel.setMaximumSize(new Dimension(430, 115));
+        panel.setPreferredSize(new Dimension(430, 115));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel title = new JLabel("SB CAR RENTAL");
-
-        title.setFont(new Font("Segoe UI", Font.BOLD, 34));
-
-        title.setForeground(Color.WHITE);
-
+        title.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        title.setForeground(NAVY);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        panel.add(title);
-
-        panel.add(Box.createVerticalStrut(15));
-
-        JLabel subTitle = new JLabel("Vehicle Rental Management System");
-
-        subTitle.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-
-        subTitle.setForeground(Color.WHITE);
-
-        subTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        panel.add(subTitle);
-
-        panel.add(Box.createVerticalStrut(30));
-
-        JLabel line1 = new JLabel("✔ Cars");
-
-        line1.setForeground(Color.WHITE);
-
-        line1.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-
-        line1.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        panel.add(line1);
-
-        panel.add(Box.createVerticalStrut(10));
-
-        JLabel line2 = new JLabel("✔ Trucks");
-
-        line2.setForeground(Color.WHITE);
-
-        line2.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-
-        line2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        panel.add(line2);
-
-        panel.add(Box.createVerticalStrut(10));
-
-        JLabel line3 = new JLabel("✔ Motorcycles");
-
-        line3.setForeground(Color.WHITE);
-
-        line3.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-
-        line3.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        panel.add(line3);
-
-        panel.add(Box.createVerticalStrut(10));
-
-        JLabel line4 = new JLabel("✔ Electric Vehicles");
-
-        line4.setForeground(Color.WHITE);
-
-        line4.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-
-        line4.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        panel.add(line4);
-
-        panel.add(Box.createVerticalGlue());
-
-        return panel;
-
-    }
-
-    private JPanel createRightPanel() {
-
-        JPanel panel = new JPanel();
-
-        panel.setBackground(Color.WHITE);
-
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        panel.setBorder(new EmptyBorder(50, 60, 50, 60));
+        JLabel subtitle = new JLabel("Vehicle Rental Management System");
+        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        subtitle.setForeground(TEXT_GRAY);
+        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel welcome = new JLabel("Welcome Back");
+        welcome.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        welcome.setForeground(TEXT_DARK);
+        welcome.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        welcome.setFont(new Font("Segoe UI", Font.BOLD, 34));
+        JLabel loginText = new JLabel("Login to continue to your dashboard");
+        loginText.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        loginText.setForeground(TEXT_GRAY);
+        loginText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        welcome.setForeground(new Color(15, 76, 129));
-
-        welcome.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        panel.add(title);
+        panel.add(Box.createVerticalStrut(5));
+        panel.add(subtitle);
+        panel.add(Box.createVerticalStrut(18));
         panel.add(welcome);
-
-        panel.add(Box.createVerticalStrut(8));
-
-        JLabel subTitle = new JLabel("Please login to continue");
-
-        subTitle.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-
-        subTitle.setForeground(Color.GRAY);
-
-        subTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        panel.add(subTitle);
-
-        panel.add(Box.createVerticalStrut(40));
-
-        JLabel usernameLabel = new JLabel("Username");
-
-        usernameLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-
-        usernameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        panel.add(usernameLabel);
-
-        panel.add(Box.createVerticalStrut(8));
-
-        usernameField = new JTextField();
-
-        usernameField.setMaximumSize(new Dimension(340, 45));
-
-        usernameField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-
-        panel.add(usernameField);
-
-        panel.add(Box.createVerticalStrut(20));
-
-        JLabel passwordLabel = new JLabel("Password");
-
-        passwordLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-
-        passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        panel.add(passwordLabel);
-
-        panel.add(Box.createVerticalStrut(8));
-
-        passwordField = new JPasswordField();
-
-        passwordField.setMaximumSize(new Dimension(340, 45));
-
-        passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-
-        panel.add(passwordField);
-
-        panel.add(Box.createVerticalStrut(10));
-
-        showPassword = new JCheckBox("Show Password");
-
-        showPassword.setBackground(Color.WHITE);
-
-        showPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-
-        showPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        panel.add(showPassword);
-
-        panel.add(Box.createVerticalStrut(30));
-
-        loginButton = new JButton("LOGIN");
-
-        loginButton.setMaximumSize(new Dimension(340, 48));
-
-        loginButton.setBackground(new Color(25, 118, 210));
-
-        loginButton.setForeground(Color.WHITE);
-
-        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
-
-        loginButton.setFocusPainted(false);
-
-        loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(loginButton);
-
-        panel.add(Box.createVerticalStrut(15));
-
-        exitButton = new JButton("EXIT");
-
-        exitButton.setMaximumSize(new Dimension(340, 45));
-
-        exitButton.setBackground(new Color(220, 53, 69));
-
-        exitButton.setForeground(Color.WHITE);
-
-        exitButton.setFont(new Font("Segoe UI", Font.BOLD, 17));
-
-        exitButton.setFocusPainted(false);
-
-        exitButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(exitButton);
-
-        panel.add(Box.createVerticalGlue());
-
-        JLabel footer = new JLabel("© 2026 SB Car Rental");
-
-        footer.setForeground(Color.GRAY);
-
-        footer.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-
-        footer.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        panel.add(footer);
+        panel.add(Box.createVerticalStrut(5));
+        panel.add(loginText);
 
         return panel;
+    }
 
+    private JPanel createFormPanel() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setMaximumSize(new Dimension(360, 190));
+        panel.setPreferredSize(new Dimension(360, 190));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel usernameLabel = createInputLabel("Username");
+        usernameField = createTextField();
+
+        JLabel passwordLabel = createInputLabel("Password");
+        passwordField = createPasswordField();
+
+        showPasswordCheckBox = new JCheckBox("Show Password");
+        showPasswordCheckBox.setOpaque(false);
+        showPasswordCheckBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        showPasswordCheckBox.setForeground(TEXT_DARK);
+        showPasswordCheckBox.setFocusPainted(false);
+        showPasswordCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        messageLabel = new JLabel(" ");
+        messageLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        messageLabel.setForeground(RED);
+        messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        panel.add(usernameLabel);
+        panel.add(Box.createVerticalStrut(6));
+        panel.add(usernameField);
+        panel.add(Box.createVerticalStrut(13));
+        panel.add(passwordLabel);
+        panel.add(Box.createVerticalStrut(6));
+        panel.add(passwordField);
+        panel.add(Box.createVerticalStrut(8));
+        panel.add(showPasswordCheckBox);
+        panel.add(Box.createVerticalStrut(6));
+        panel.add(messageLabel);
+
+        return panel;
+    }
+
+    private JPanel createButtonsPanel() {
+        JPanel panel = new JPanel(new GridLayout(1, 2, 18, 0));
+        panel.setOpaque(false);
+        panel.setMaximumSize(new Dimension(360, 46));
+        panel.setPreferredSize(new Dimension(360, 46));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        loginButton = createButton("LOGIN", BLUE);
+        exitButton = createButton("EXIT", RED);
+
+        panel.add(loginButton);
+        panel.add(exitButton);
+
+        return panel;
+    }
+
+    private JLabel createFooterLabel() {
+        JLabel footer = new JLabel("© 2026 SB Car Rental");
+        footer.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        footer.setForeground(TEXT_GRAY);
+        footer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return footer;
+    }
+
+    private JLabel createInputLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        label.setForeground(TEXT_DARK);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return label;
+    }
+
+    private JTextField createTextField() {
+        JTextField field = new JTextField();
+        field.setPreferredSize(new Dimension(360, 40));
+        field.setMaximumSize(new Dimension(360, 40));
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        field.setForeground(TEXT_DARK);
+        field.setCaretColor(BLUE);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(190, 210, 225), 1),
+                new EmptyBorder(8, 12, 8, 12)
+        ));
+        field.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return field;
+    }
+
+    private JPasswordField createPasswordField() {
+        JPasswordField field = new JPasswordField();
+        field.setPreferredSize(new Dimension(360, 40));
+        field.setMaximumSize(new Dimension(360, 40));
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        field.setForeground(TEXT_DARK);
+        field.setCaretColor(BLUE);
+        field.setEchoChar('•');
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(190, 210, 225), 1),
+                new EmptyBorder(8, 12, 8, 12)
+        ));
+        field.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return field;
+    }
+
+    private JButton createButton(String text, Color color) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(170, 46));
+        button.setBackground(color);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(color.darker());
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(color);
+            }
+        });
+
+        return button;
+    }
+
+    private ImageIcon loadLogoIcon(int width, int height) {
+        URL logoUrl = getClass().getResource("/images/logo.png");
+
+        if (logoUrl == null) {
+            return new ImageIcon();
+        }
+
+        ImageIcon icon = new ImageIcon(logoUrl);
+        Image image = icon.getImage().getScaledInstance(
+                width,
+                height,
+                Image.SCALE_SMOOTH
+        );
+
+        return new ImageIcon(image);
     }
 
     private void initializeEvents() {
-
-        showPassword.addActionListener(e -> {
-
-            if (showPassword.isSelected()) {
-
-                passwordField.setEchoChar((char) 0);
-
-            } else {
-
-                passwordField.setEchoChar('•');
-
-            }
-
-        });
-
         loginButton.addActionListener(e -> login());
 
-        exitButton.addActionListener(e -> {
+        exitButton.addActionListener(e -> System.exit(0));
 
-            int choice = JOptionPane.showConfirmDialog(
-
-                    this,
-
-                    "Are you sure you want to exit?",
-
-                    "Exit",
-
-                    JOptionPane.YES_NO_OPTION,
-
-                    JOptionPane.QUESTION_MESSAGE
-
-            );
-
-            if (choice == JOptionPane.YES_OPTION) {
-
-                System.exit(0);
-
+        showPasswordCheckBox.addActionListener(e -> {
+            if (showPasswordCheckBox.isSelected()) {
+                passwordField.setEchoChar((char) 0);
+            } else {
+                passwordField.setEchoChar('•');
             }
-
         });
-
     }
 
     private void login() {
-
         String username = usernameField.getText().trim();
-
-        String password =
-                new String(passwordField.getPassword());
+        String password = new String(passwordField.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Please enter username and password.",
-                    "Warning",
-                    JOptionPane.WARNING_MESSAGE);
-
+            showError("Please enter username and password.");
             return;
-
         }
 
         boolean success = loginService.login(username, password);
 
         if (success) {
-
             dispose();
-
             new DashboardFrame();
-
         } else {
+            showError("Invalid username or password.");
+        }
+    }
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Invalid Username or Password",
-                    "Login Failed",
-                    JOptionPane.ERROR_MESSAGE);
+    private void showError(String message) {
+        messageLabel.setForeground(RED);
+        messageLabel.setText(message);
+    }
 
-            passwordField.setText("");
+    private static class GradientBackgroundPanel extends JPanel {
 
-            usernameField.requestFocus();
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
 
+            Graphics2D g2 = (Graphics2D) g;
+
+            GradientPaint gradient = new GradientPaint(
+                    0, 0, PAGE_BG,
+                    getWidth(), getHeight(), new Color(244, 248, 252)
+            );
+
+            g2.setPaint(gradient);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+
+            g2.setColor(new Color(18, 54, 82, 20));
+            g2.fillOval(-150, -150, 410, 410);
+
+            g2.setColor(new Color(65, 130, 190, 18));
+            g2.fillOval(getWidth() - 240, getHeight() - 240, 390, 390);
+        }
+    }
+
+    private static class RoundedPanel extends JPanel {
+
+        private final int radius;
+        private final Color backgroundColor;
+
+        public RoundedPanel(int radius, Color backgroundColor) {
+            this.radius = radius;
+            this.backgroundColor = backgroundColor;
+            setOpaque(false);
         }
 
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+
+            g2.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
+            );
+
+            g2.setColor(new Color(0, 0, 0, 18));
+            g2.fillRoundRect(8, 8, getWidth() - 16, getHeight() - 16, radius, radius);
+
+            g2.setColor(backgroundColor);
+            g2.fillRoundRect(0, 0, getWidth() - 16, getHeight() - 16, radius, radius);
+
+            g2.dispose();
+
+            super.paintComponent(g);
+        }
     }
 }
