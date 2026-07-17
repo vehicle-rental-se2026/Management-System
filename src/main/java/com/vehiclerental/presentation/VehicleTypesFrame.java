@@ -13,7 +13,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
+/**
+ * The VehicleTypesFrame class provides the user
+ * interface for viewing vehicle types.
+ */
 public class VehicleTypesFrame extends JFrame {
 
     private static final Color NAVY = new Color(18, 54, 82);

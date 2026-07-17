@@ -1,5 +1,9 @@
 package com.vehiclerental.domain;
-
+/**
+ * The Rental class represents a vehicle rental.
+ * It stores rental information including the rented
+ * vehicle, rental duration, rental status, and total cost.
+ */
 public class Rental {
 
     private Vehicle vehicle;

@@ -2,7 +2,10 @@ package com.vehiclerental.service;
 
 import com.vehiclerental.domain.Manager;
 import com.vehiclerental.repository.ManagerRepository;
-
+/**
+ * The LoginService class handles manager
+ * authentication and login operations.
+ */
 public class LoginService {
 
     private final ManagerRepository managerRepository;

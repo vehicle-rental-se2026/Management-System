@@ -1,5 +1,9 @@
 package com.vehiclerental.domain;
-
+/**
+ * The Manager class represents the system manager.
+ * It stores the manager's login credentials and
+ * authentication status.
+ */
 public class Manager {
 
     private String username;

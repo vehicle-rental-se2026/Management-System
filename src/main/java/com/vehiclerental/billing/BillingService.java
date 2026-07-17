@@ -2,7 +2,11 @@ package com.vehiclerental.billing;
 
 import com.vehiclerental.strategy.PricingStrategy;
 import com.vehiclerental.strategy.StandardPricingStrategy;
-
+/**
+ * The BillingService class is responsible for calculating
+ * rental costs, late penalties, and the total payment
+ * using the selected pricing strategy.
+ */
 public class BillingService {
 
     private PricingStrategy pricingStrategy;

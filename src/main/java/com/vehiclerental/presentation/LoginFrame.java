@@ -9,7 +9,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
-
+/**
+ * The LoginFrame class provides the user interface
+ * for manager authentication and system login.
+ */
 public class LoginFrame extends JFrame {
 
     private static final Color NAVY = new Color(18, 54, 82);

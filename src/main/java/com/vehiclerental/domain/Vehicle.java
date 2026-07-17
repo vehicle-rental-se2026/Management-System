@@ -1,7 +1,11 @@
 package com.vehiclerental.domain;
 
 import com.vehiclerental.enums.VehicleType;
-
+/**
+ * The Vehicle class represents a vehicle in the rental system.
+ * It stores vehicle information including its identifier,
+ * brand, model, type, and availability status.
+ */
 public class Vehicle {
 
     private int id;

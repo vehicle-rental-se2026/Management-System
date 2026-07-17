@@ -2,7 +2,10 @@ package com.vehiclerental.vehicletype;
 
 import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.enums.VehicleType;
-
+/**
+ * The ElectricVehicle class represents an
+ * electric vehicle available for rental.
+ */
 public class ElectricVehicle extends Vehicle {
 
     public ElectricVehicle(int id, String brand, String model, boolean available) {

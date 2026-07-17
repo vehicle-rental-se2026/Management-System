@@ -13,7 +13,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-
+/**
+ * The ViewVehiclesFrame class provides the user
+ * interface for displaying all available vehicles.
+ */
 public class ViewVehiclesFrame extends JFrame {
 
     private static final Color NAVY = new Color(18, 54, 82);

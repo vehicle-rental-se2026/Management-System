@@ -8,7 +8,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+/**
+ * The DashboardFrame class provides the main user
+ * interface for accessing the vehicle rental
+ * management system features.
+ */
 public class DashboardFrame extends JFrame {
 
     private static final Color NAVY = new Color(18, 54, 82);

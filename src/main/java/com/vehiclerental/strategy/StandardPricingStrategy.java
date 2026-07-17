@@ -1,5 +1,8 @@
 package com.vehiclerental.strategy;
-
+/**
+ * The StandardPricingStrategy class calculates
+ * rental prices using the standard pricing rules.
+ */
 public class StandardPricingStrategy implements PricingStrategy {
 
     private static final double DAILY_RATE = 40.0;

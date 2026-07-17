@@ -5,7 +5,10 @@ import com.vehiclerental.repository.VehicleRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The VehicleService class manages vehicle
+ * operations and availability.
+ */
 public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
