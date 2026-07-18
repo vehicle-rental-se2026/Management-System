@@ -5,7 +5,10 @@ import com.vehiclerental.vehicletype.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The VehicleRepository class manages vehicle data
+ * and provides access to available vehicles.
+ */
 public class VehicleRepository {
 
     private static final List<Vehicle> vehicles = new ArrayList<>();

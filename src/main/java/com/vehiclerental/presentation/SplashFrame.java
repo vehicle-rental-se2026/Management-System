@@ -3,7 +3,10 @@ package com.vehiclerental.presentation;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-
+/**
+ * The SplashFrame class displays the splash screen
+ * when the application starts.
+ */
 public class SplashFrame extends JFrame {
 
     private JProgressBar progressBar;
@@ -111,10 +114,8 @@ public class SplashFrame extends JFrame {
                     RenderingHints.VALUE_ANTIALIAS_ON
             );
 
-            // تعبئة كاملة للشاشة
             g2.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-            // طبقة خفيفة فوق الصورة حتى يبين شريط التحميل أوضح
             g2.setColor(new Color(8, 28, 48, 55));
             g2.fillRect(0, 0, getWidth(), getHeight());
 

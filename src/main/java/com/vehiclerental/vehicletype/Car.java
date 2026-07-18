@@ -2,7 +2,10 @@ package com.vehiclerental.vehicletype;
 
 import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.enums.VehicleType;
-
+/**
+ * The Car class represents a car available
+ * for rental in the system.
+ */
 public class Car extends Vehicle {
 
     public Car(int id, String brand, String model, boolean available) {

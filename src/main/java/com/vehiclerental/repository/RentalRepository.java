@@ -4,7 +4,10 @@ import com.vehiclerental.domain.Rental;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The RentalRepository class manages rental records
+ * and provides access to rental data.
+ */
 public class RentalRepository {
 
     private static final List<Rental> rentals = new ArrayList<>();

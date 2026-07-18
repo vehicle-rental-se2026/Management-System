@@ -1,5 +1,8 @@
 package com.vehiclerental.strategy;
-
+/**
+ * The ElectricPricingStrategy class calculates
+ * rental prices for electric vehicles.
+ */
 public class ElectricPricingStrategy implements PricingStrategy {
 
     private static final double DAILY_RATE = 50.0;

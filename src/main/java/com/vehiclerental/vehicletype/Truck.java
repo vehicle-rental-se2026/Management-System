@@ -2,7 +2,10 @@ package com.vehiclerental.vehicletype;
 
 import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.enums.VehicleType;
-
+/**
+ * The Truck class represents a truck available
+ * for rental in the system.
+ */
 public class Truck extends Vehicle {
 
     public Truck(int id, String brand, String model, boolean available) {

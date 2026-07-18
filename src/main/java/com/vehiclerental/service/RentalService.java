@@ -10,7 +10,10 @@ import com.vehiclerental.observer.NotificationManager;
 import com.vehiclerental.repository.RentalRepository;
 
 import java.util.List;
-
+/**
+ * The RentalService class manages vehicle rental,
+ * return operations, and rental reminders.
+ */
 public class RentalService {
 
     private final RentalRepository rentalRepository;

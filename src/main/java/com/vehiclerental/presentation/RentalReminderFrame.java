@@ -1,5 +1,6 @@
 package com.vehiclerental.presentation;
 
+import com.vehiclerental.domain.Rental;
 import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.notification.EmailNotificationService;
 import com.vehiclerental.repository.VehicleRepository;
@@ -11,7 +12,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+/**
+ * The RentalReminderFrame class provides the user
+ * interface for sending rental reminder
+ * notifications.
+ */
 public class RentalReminderFrame extends JFrame {
 
     private static final Color NAVY = new Color(18, 54, 82);
@@ -283,23 +288,28 @@ public class RentalReminderFrame extends JFrame {
     }
 
     private void loadVehicles() {
+
         vehicleComboBox.removeAllItems();
 
         int count = 0;
 
-        for (Vehicle vehicle : vehicleService.getAvailableVehicles()) {
-            vehicleComboBox.addItem(vehicle);
+        for (Rental rental : rentalService.getActiveRentals()) {
+
+            vehicleComboBox.addItem(rental.getVehicle());
             count++;
+
         }
 
-        availableVehiclesLabel.setText("Available Vehicles: " + count);
+        availableVehiclesLabel.setText("Active Rentals: " + count);
+
         updateSelectedVehicleInfo();
 
         if (count == 0) {
-            showMessage("No available vehicles found.", false);
+            showMessage("No active rentals found.", false);
         } else {
             messageLabel.setText(" ");
         }
+
     }
 
     private void initializeEvents() {

@@ -10,7 +10,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+/**
+ * The ReturnVehicleFrame class provides the user
+ * interface for returning rented vehicles.
+ */
 public class ReturnVehicleFrame extends JFrame {
 
     private static final Color NAVY = new Color(18, 54, 82);
