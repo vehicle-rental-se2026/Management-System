@@ -1,4 +1,7 @@
 package com.vehiclerental.observer;
+
+import java.util.logging.Logger;
+
 /**
  * The InternalNotificationObserver class receives
  * notification messages and displays them as
@@ -6,11 +9,11 @@ package com.vehiclerental.observer;
  */
 public class InternalNotificationObserver implements NotificationObserver {
 
+    private static final Logger LOGGER =
+            Logger.getLogger(InternalNotificationObserver.class.getName());
+
     @Override
     public void update(String message) {
-
-        System.out.println("Internal Notification: " + message);
-
+        LOGGER.info("Internal Notification: " + message);
     }
-
 }

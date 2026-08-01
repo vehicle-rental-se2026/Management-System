@@ -7,12 +7,16 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 /**
  * The BillingFrame class provides the user interface
  * for calculating rental costs, late penalties,
  * and total payment.
  */
 public class BillingFrame extends JFrame {
+
+    // Constants
+    private static final String FONT_NAME = "Segoe UI";
 
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color NAVY_LIGHT = new Color(35, 92, 132);
@@ -75,11 +79,11 @@ public class BillingFrame extends JFrame {
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
 
         JLabel title = new JLabel("Billing");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        title.setFont(new Font(FONT_NAME, Font.BOLD, 32));
         title.setForeground(Color.WHITE);
 
         JLabel subtitle = new JLabel("Calculate rental cost, late penalty, and total amount");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         subtitle.setForeground(new Color(220, 235, 245));
 
         titlePanel.add(title);
@@ -122,12 +126,12 @@ public class BillingFrame extends JFrame {
         panel.setBorder(new EmptyBorder(30, 28, 30, 28));
 
         JLabel title = new JLabel("Billing Details");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setFont(new Font(FONT_NAME, Font.BOLD, 24));
         title.setForeground(NAVY);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel subtitle = new JLabel("Enter rental days and late days.");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
         subtitle.setForeground(TEXT_GRAY);
         subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -155,7 +159,7 @@ public class BillingFrame extends JFrame {
         panel.add(Box.createVerticalStrut(18));
 
         messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        messageLabel.setFont(new Font(FONT_NAME, Font.BOLD, 14));
         messageLabel.setForeground(RED);
         messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(messageLabel);
@@ -178,7 +182,7 @@ public class BillingFrame extends JFrame {
         panel.add(Box.createVerticalGlue());
 
         JLabel hint = new JLabel("<html>Example: Rental Days = 5, Late Days = 2</html>");
-        hint.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        hint.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
         hint.setForeground(TEXT_GRAY);
         hint.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(hint);
@@ -192,12 +196,12 @@ public class BillingFrame extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JLabel title = new JLabel("Payment Summary");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setFont(new Font(FONT_NAME, Font.BOLD, 24));
         title.setForeground(TEXT_DARK);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel subtitle = new JLabel("Calculated values will appear below.");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
         subtitle.setForeground(TEXT_GRAY);
         subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -229,7 +233,7 @@ public class BillingFrame extends JFrame {
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        titleLabel.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         titleLabel.setForeground(TEXT_GRAY);
 
         card.add(titleLabel, BorderLayout.WEST);
@@ -240,14 +244,14 @@ public class BillingFrame extends JFrame {
 
     private JLabel createValueLabel(String text, Color color) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        label.setFont(new Font(FONT_NAME, Font.BOLD, 20));
         label.setForeground(color);
         return label;
     }
 
     private JLabel createInputLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        label.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         label.setForeground(TEXT_DARK);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         return label;
@@ -256,7 +260,7 @@ public class BillingFrame extends JFrame {
     private JTextField createTextField() {
         JTextField field = new JTextField();
         field.setMaximumSize(new Dimension(360, 44));
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        field.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         field.setForeground(TEXT_DARK);
         field.setCaretColor(BLUE);
         field.setBorder(BorderFactory.createCompoundBorder(
@@ -272,7 +276,7 @@ public class BillingFrame extends JFrame {
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(color);
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -298,7 +302,7 @@ public class BillingFrame extends JFrame {
         footer.setBorder(new EmptyBorder(12, 0, 12, 0));
 
         JLabel label = new JLabel("SB Car Rental Management System");
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        label.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
         label.setForeground(TEXT_GRAY);
 
         footer.add(label);
