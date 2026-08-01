@@ -162,7 +162,6 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-
                 </executions>
             </plugin>
         </plugins>
