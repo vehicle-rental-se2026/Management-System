@@ -4,7 +4,7 @@ import com.vehiclerental.enums.VehicleType;
 /**
  * The Vehicle class represents a vehicle in the rental system.
  * It stores vehicle information including its identifier,
- * brand, model, type, and availability status.
+ * brand, model, type, and availability status.147
  */
 public class Vehicle {
 
