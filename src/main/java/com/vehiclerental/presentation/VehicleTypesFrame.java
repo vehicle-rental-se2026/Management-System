@@ -20,6 +20,9 @@ import java.util.Map;
  */
 public class VehicleTypesFrame extends JFrame {
 
+    private static final String FONT_NAME = "Segoe UI";
+    private static final String TITLE_APP = "SB Car Rental Management System";
+
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color NAVY_LIGHT = new Color(35, 92, 132);
     private static final Color PAGE_BG = new Color(244, 248, 252);
@@ -73,17 +76,10 @@ public class VehicleTypesFrame extends JFrame {
         header.setLayout(new BorderLayout());
         header.setBorder(new EmptyBorder(24, 34, 24, 34));
 
-        JPanel titlePanel = new JPanel();
-        titlePanel.setOpaque(false);
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        JPanel titlePanel = createYBoxPanel();
 
-        JLabel title = new JLabel("Vehicle Types");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 32));
-        title.setForeground(Color.WHITE);
-
-        JLabel subtitle = new JLabel("View all vehicles grouped by their rental category");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        subtitle.setForeground(new Color(220, 235, 245));
+        JLabel title = createStandardLabel("Vehicle Types", Font.BOLD, 32, Color.WHITE, Component.LEFT_ALIGNMENT);
+        JLabel subtitle = createStandardLabel("View all vehicles grouped by their rental category", Font.PLAIN, 15, new Color(220, 235, 245), Component.LEFT_ALIGNMENT);
 
         titlePanel.add(title);
         titlePanel.add(Box.createVerticalStrut(5));
@@ -129,30 +125,25 @@ public class VehicleTypesFrame extends JFrame {
         panel.setBorder(new EmptyBorder(18, 24, 18, 24));
         panel.setPreferredSize(new Dimension(900, 105));
 
-        totalVehiclesLabel = new JLabel("0", SwingConstants.CENTER);
-        typesCountLabel = new JLabel("0", SwingConstants.CENTER);
-        mainTypeLabel = new JLabel("--", SwingConstants.CENTER);
+        totalVehiclesLabel = createStandardLabel("0", Font.BOLD, 24, BLUE, Component.CENTER_ALIGNMENT);
+        typesCountLabel = createStandardLabel("0", Font.BOLD, 24, GREEN, Component.CENTER_ALIGNMENT);
+        mainTypeLabel = createStandardLabel("--", Font.BOLD, 24, ORANGE, Component.CENTER_ALIGNMENT);
 
-        panel.add(createInfoCard("Total Vehicles", totalVehiclesLabel, BLUE));
-        panel.add(createInfoCard("Vehicle Types", typesCountLabel, GREEN));
-        panel.add(createInfoCard("Most Common Type", mainTypeLabel, ORANGE));
+        totalVehiclesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        typesCountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        mainTypeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panel.add(createInfoCard("Total Vehicles", totalVehiclesLabel));
+        panel.add(createInfoCard("Vehicle Types", typesCountLabel));
+        panel.add(createInfoCard("Most Common Type", mainTypeLabel));
 
         return panel;
     }
 
-    private JPanel createInfoCard(String title, JLabel valueLabel, Color color) {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    private JPanel createInfoCard(String title, JLabel valueLabel) {
+        JPanel panel = createYBoxPanel();
 
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        titleLabel.setForeground(TEXT_GRAY);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        valueLabel.setForeground(color);
-        valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel titleLabel = createStandardLabel(title, Font.PLAIN, 15, TEXT_GRAY, Component.CENTER_ALIGNMENT);
 
         panel.add(Box.createVerticalGlue());
         panel.add(titleLabel);
@@ -180,7 +171,7 @@ public class VehicleTypesFrame extends JFrame {
 
         JTable table = new JTable(model);
         table.setRowHeight(38);
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        table.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         table.setForeground(TEXT_DARK);
         table.setGridColor(new Color(225, 232, 238));
         table.setSelectionBackground(new Color(225, 241, 255));
@@ -188,7 +179,7 @@ public class VehicleTypesFrame extends JFrame {
         table.setShowVerticalLines(false);
 
         JTableHeader header = table.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        header.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         header.setBackground(new Color(235, 242, 248));
         header.setForeground(TEXT_DARK);
         header.setPreferredSize(new Dimension(header.getWidth(), 42));
@@ -211,11 +202,65 @@ public class VehicleTypesFrame extends JFrame {
         return scrollPane;
     }
 
+    private JPanel createFooter() {
+        JPanel footer = new JPanel();
+        footer.setBackground(new Color(248, 249, 250));
+        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
+
+        JLabel label = createStandardLabel(TITLE_APP, Font.PLAIN, 13, TEXT_GRAY, Component.CENTER_ALIGNMENT);
+        footer.add(label);
+
+        return footer;
+    }
+
+    // --- Helper UI Methods ---
+
+    private JPanel createYBoxPanel() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        return panel;
+    }
+
+    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color, float alignmentX) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
+        label.setForeground(color);
+        label.setAlignmentX(alignmentX);
+        return label;
+    }
+
+    private JButton createHeaderButton(String text, Color color) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(110, 42));
+        button.setBackground(color);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 15));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(color.darker());
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(color);
+            }
+        });
+
+        return button;
+    }
+
+    // --- Logic & Events ---
+
     private void loadVehicleTypes() {
         model.setRowCount(0);
 
         Map<String, Integer> typeCounts = new LinkedHashMap<>();
-
         int totalVehicles = 0;
 
         for (Vehicle vehicle : repository.getAllVehicles()) {
@@ -251,44 +296,6 @@ public class VehicleTypesFrame extends JFrame {
         return mostCommonType;
     }
 
-    private JButton createHeaderButton(String text, Color color) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(110, 42));
-        button.setBackground(color);
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                button.setBackground(color.darker());
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                button.setBackground(color);
-            }
-        });
-
-        return button;
-    }
-
-    private JPanel createFooter() {
-        JPanel footer = new JPanel();
-        footer.setBackground(new Color(248, 249, 250));
-        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
-
-        JLabel label = new JLabel("SB Car Rental Management System");
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        label.setForeground(TEXT_GRAY);
-
-        footer.add(label);
-        return footer;
-    }
-
     private void initializeEvents() {
         refreshButton.addActionListener(e -> loadVehicleTypes());
 
@@ -297,6 +304,8 @@ public class VehicleTypesFrame extends JFrame {
             new DashboardFrame();
         });
     }
+
+    // --- Custom UI Components ---
 
     private static class RoundedPanel extends JPanel {
         private final int radius;

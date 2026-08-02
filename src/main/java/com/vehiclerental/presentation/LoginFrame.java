@@ -18,6 +18,7 @@ public class LoginFrame extends JFrame {
 
     // Constants
     private static final String FONT_NAME = "Segoe UI";
+    private static final String TITLE_APP = "SB CAR RENTAL";
 
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color PAGE_BG = new Color(226, 239, 248);
@@ -94,7 +95,7 @@ public class LoginFrame extends JFrame {
     private JPanel createTitlePanel() {
         JPanel panel = createYBoxPanel(430, 115);
 
-        JLabel title = createStandardLabel("SB CAR RENTAL", Font.BOLD, 30, NAVY, Component.CENTER_ALIGNMENT);
+        JLabel title = createStandardLabel(TITLE_APP, Font.BOLD, 30, NAVY, Component.CENTER_ALIGNMENT);
         JLabel subtitle = createStandardLabel("Vehicle Rental Management System", Font.PLAIN, 15, TEXT_GRAY, Component.CENTER_ALIGNMENT);
         JLabel welcome = createStandardLabel("Welcome Back", Font.BOLD, 22, TEXT_DARK, Component.CENTER_ALIGNMENT);
         JLabel loginText = createStandardLabel("Login to continue to your dashboard", Font.PLAIN, 13, TEXT_GRAY, Component.CENTER_ALIGNMENT);
@@ -163,7 +164,7 @@ public class LoginFrame extends JFrame {
         return createStandardLabel("© 2026 SB Car Rental", Font.PLAIN, 12, TEXT_GRAY, Component.CENTER_ALIGNMENT);
     }
 
-    // --- Helper Methods to Eliminate Code Duplication ---
+    // --- Helper UI Methods ---
 
     private JPanel createYBoxPanel(int width, int height) {
         JPanel panel = new JPanel();
@@ -255,6 +256,8 @@ public class LoginFrame extends JFrame {
         return new ImageIcon(image);
     }
 
+    // --- Logic & Events ---
+
     private void initializeEvents() {
         loginButton.addActionListener(e -> login());
         exitButton.addActionListener(e -> System.exit(0));
@@ -292,7 +295,7 @@ public class LoginFrame extends JFrame {
         messageLabel.setText(message);
     }
 
-    // --- Custom UI Panels ---
+    // --- Custom UI Components ---
 
     private static class GradientBackgroundPanel extends JPanel {
 

@@ -18,6 +18,7 @@ public class DashboardFrame extends JFrame {
 
     // Constants
     private static final String FONT_NAME = "Segoe UI";
+    private static final String TITLE_APP = "SB CAR RENTAL";
 
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color NAVY_LIGHT = new Color(35, 92, 132);
@@ -73,17 +74,10 @@ public class DashboardFrame extends JFrame {
         header.setLayout(new BorderLayout());
         header.setBorder(new EmptyBorder(24, 38, 24, 38));
 
-        JPanel titlePanel = new JPanel();
-        titlePanel.setOpaque(false);
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        JPanel titlePanel = createYBoxPanel();
 
-        JLabel title = new JLabel("SB CAR RENTAL");
-        title.setFont(new Font(FONT_NAME, Font.BOLD, 34));
-        title.setForeground(Color.WHITE);
-
-        JLabel subtitle = new JLabel("Vehicle Rental Management System");
-        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        subtitle.setForeground(new Color(220, 235, 245));
+        JLabel title = createStandardLabel(TITLE_APP, Font.BOLD, 34, Color.WHITE, Component.LEFT_ALIGNMENT);
+        JLabel subtitle = createStandardLabel("Vehicle Rental Management System", Font.PLAIN, 15, new Color(220, 235, 245), Component.LEFT_ALIGNMENT);
 
         titlePanel.add(title);
         titlePanel.add(Box.createVerticalStrut(5));
@@ -94,10 +88,7 @@ public class DashboardFrame extends JFrame {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 8));
         rightPanel.setOpaque(false);
 
-        JLabel admin = new JLabel("Administrator");
-        admin.setFont(new Font(FONT_NAME, Font.BOLD, 17));
-        admin.setForeground(Color.WHITE);
-
+        JLabel admin = createStandardLabel("Administrator", Font.BOLD, 17, Color.WHITE, Component.CENTER_ALIGNMENT);
         logoutButton = createHeaderButton("Logout");
 
         rightPanel.add(admin);
@@ -113,19 +104,10 @@ public class DashboardFrame extends JFrame {
         center.setBackground(PAGE_BG);
         center.setBorder(new EmptyBorder(30, 42, 28, 42));
 
-        JPanel topPanel = new JPanel();
-        topPanel.setOpaque(false);
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        JPanel topPanel = createYBoxPanel();
 
-        JLabel welcome = new JLabel("Welcome to SB Car Rental Dashboard");
-        welcome.setFont(new Font(FONT_NAME, Font.BOLD, 30));
-        welcome.setForeground(TEXT_DARK);
-        welcome.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel description = new JLabel("Manage vehicles, rentals, billing, reminders, and vehicle types.");
-        description.setFont(new Font(FONT_NAME, Font.PLAIN, 16));
-        description.setForeground(TEXT_GRAY);
-        description.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel welcome = createStandardLabel("Welcome to SB Car Rental Dashboard", Font.BOLD, 30, TEXT_DARK, Component.CENTER_ALIGNMENT);
+        JLabel description = createStandardLabel("Manage vehicles, rentals, billing, reminders, and vehicle types.", Font.PLAIN, 16, TEXT_GRAY, Component.CENTER_ALIGNMENT);
 
         topPanel.add(welcome);
         topPanel.add(Box.createVerticalStrut(8));
@@ -137,41 +119,12 @@ public class DashboardFrame extends JFrame {
         JPanel cardsPanel = new JPanel(new GridLayout(2, 3, 22, 22));
         cardsPanel.setOpaque(false);
 
-        vehiclesButton = createCard(
-                "View Vehicles",
-                "Browse all vehicles and availability",
-                new Color(65, 130, 190)
-        );
-
-        rentButton = createCard(
-                "Rent Vehicle",
-                "Create a new rental transaction",
-                new Color(78, 150, 120)
-        );
-
-        returnButton = createCard(
-                "Return Vehicle",
-                "Return rented vehicles safely",
-                new Color(210, 145, 80)
-        );
-
-        billingButton = createCard(
-                "Billing",
-                "Calculate cost and late penalty",
-                new Color(125, 105, 170)
-        );
-
-        vehicleTypesButton = createCard(
-                "Vehicle Types",
-                "View vehicles by category",
-                new Color(60, 145, 145)
-        );
-
-        reminderButton = createCard(
-                "Rental Reminder",
-                "Send rental reminder messages",
-                new Color(190, 90, 90)
-        );
+        vehiclesButton = createCard("View Vehicles", "Browse all vehicles and availability", new Color(65, 130, 190));
+        rentButton = createCard("Rent Vehicle", "Create a new rental transaction", new Color(78, 150, 120));
+        returnButton = createCard("Return Vehicle", "Return rented vehicles safely", new Color(210, 145, 80));
+        billingButton = createCard("Billing", "Calculate cost and late penalty", new Color(125, 105, 170));
+        vehicleTypesButton = createCard("Vehicle Types", "View vehicles by category", new Color(60, 145, 145));
+        reminderButton = createCard("Rental Reminder", "Send rental reminder messages", new Color(190, 90, 90));
 
         cardsPanel.add(vehiclesButton);
         cardsPanel.add(rentButton);
@@ -181,7 +134,6 @@ public class DashboardFrame extends JFrame {
         cardsPanel.add(reminderButton);
 
         center.add(cardsPanel, BorderLayout.CENTER);
-
         center.add(createInformationPanel(), BorderLayout.SOUTH);
 
         return center;
@@ -193,30 +145,21 @@ public class DashboardFrame extends JFrame {
         panel.setBorder(new EmptyBorder(20, 24, 20, 24));
         panel.setPreferredSize(new Dimension(1000, 115));
 
-        availableVehiclesLabel = new JLabel("0", SwingConstants.CENTER);
-        rentedVehiclesLabel = new JLabel("--", SwingConstants.CENTER);
-        statusLabel = new JLabel("Online", SwingConstants.CENTER);
+        availableVehiclesLabel = createStandardLabel("0", Font.BOLD, 28, new Color(65, 130, 190), Component.CENTER_ALIGNMENT);
+        rentedVehiclesLabel = createStandardLabel("--", Font.BOLD, 28, new Color(210, 145, 80), Component.CENTER_ALIGNMENT);
+        statusLabel = createStandardLabel("Online", Font.BOLD, 28, new Color(78, 150, 120), Component.CENTER_ALIGNMENT);
 
-        panel.add(createInfoCard("Available Vehicles", availableVehiclesLabel, new Color(65, 130, 190)));
-        panel.add(createInfoCard("Rented Vehicles", rentedVehiclesLabel, new Color(210, 145, 80)));
-        panel.add(createInfoCard("System Status", statusLabel, new Color(78, 150, 120)));
+        panel.add(createInfoCard("Available Vehicles", availableVehiclesLabel));
+        panel.add(createInfoCard("Rented Vehicles", rentedVehiclesLabel));
+        panel.add(createInfoCard("System Status", statusLabel));
 
         return panel;
     }
 
-    private JPanel createInfoCard(String title, JLabel valueLabel, Color color) {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    private JPanel createInfoCard(String title, JLabel valueLabel) {
+        JPanel panel = createYBoxPanel();
 
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        titleLabel.setForeground(TEXT_GRAY);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        valueLabel.setFont(new Font(FONT_NAME, Font.BOLD, 28));
-        valueLabel.setForeground(color);
-        valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel titleLabel = createStandardLabel(title, Font.PLAIN, 15, TEXT_GRAY, Component.CENTER_ALIGNMENT);
 
         panel.add(Box.createVerticalGlue());
         panel.add(titleLabel);
@@ -232,12 +175,27 @@ public class DashboardFrame extends JFrame {
         footerPanel.setBackground(new Color(248, 249, 250));
         footerPanel.setBorder(new EmptyBorder(12, 0, 12, 0));
 
-        JLabel footer = new JLabel("© 2026 SB Car Rental - Vehicle Rental Management System");
-        footer.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
-        footer.setForeground(TEXT_GRAY);
-
+        JLabel footer = createStandardLabel("© 2026 SB Car Rental - Vehicle Rental Management System", Font.PLAIN, 13, TEXT_GRAY, Component.CENTER_ALIGNMENT);
         footerPanel.add(footer);
+
         return footerPanel;
+    }
+
+    // --- Helper UI Methods ---
+
+    private JPanel createYBoxPanel() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        return panel;
+    }
+
+    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color, float alignmentX) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
+        label.setForeground(color);
+        label.setAlignmentX(alignmentX);
+        return label;
     }
 
     private JButton createCard(String title, String description, Color accentColor) {
@@ -283,6 +241,8 @@ public class DashboardFrame extends JFrame {
 
         return button;
     }
+
+    // --- Logic & Events ---
 
     private void refreshDashboard() {
         int availableVehicles = vehicleService.getAvailableVehicles().size();
@@ -336,6 +296,8 @@ public class DashboardFrame extends JFrame {
             new RentalReminderFrame();
         });
     }
+
+    // --- Custom UI Components ---
 
     private static class CardButton extends JButton {
 
