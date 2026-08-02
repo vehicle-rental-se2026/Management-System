@@ -7,467 +7,373 @@ import com.vehiclerental.service.RentalService;
 import com.vehiclerental.service.VehicleService;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * The RentVehicleFrame class provides the user
- * interface for renting available vehicles.
+ * RentVehicleFrame manages the GUI and interaction logic for renting vehicles.
  */
 public class RentVehicleFrame extends JFrame {
 
-    private static final String FONT_NAME = "Segoe UI";
-    private static final String TITLE_RENT_VEHICLE = "Rent Vehicle";
+    // Style Constants
+    private static final String FONT_FAMILY = "Segoe UI";
+    private static final Color PRIMARY_NAVY = new Color(18, 54, 82);
+    private static final Color SECONDARY_NAVY = new Color(35, 92, 132);
+    private static final Color BACKGROUND_COLOR = new Color(244, 248, 252);
+    private static final Color TEXT_PRIMARY = new Color(33, 37, 41);
+    private static final Color TEXT_MUTED = new Color(108, 117, 125);
+    private static final Color SUCCESS_GREEN = new Color(78, 150, 120);
+    private static final Color ACCENT_BLUE = new Color(65, 130, 190);
+    private static final Color DANGER_RED = new Color(214, 80, 80);
 
-    private static final Color NAVY = new Color(18, 54, 82);
-    private static final Color NAVY_LIGHT = new Color(35, 92, 132);
-    private static final Color PAGE_BG = new Color(244, 248, 252);
-    private static final Color CARD_BG = Color.WHITE;
-    private static final Color TEXT_DARK = new Color(33, 37, 41);
-    private static final Color TEXT_GRAY = new Color(108, 117, 125);
-    private static final Color GREEN = new Color(78, 150, 120);
-    private static final Color BLUE = new Color(65, 130, 190);
-    private static final Color RED = new Color(214, 80, 80);
+    // Form Controls
+    private JComboBox<Vehicle> vehicleSelector;
+    private JTextField rentalDaysInput;
+    private JButton submitButton;
+    private JButton resetButton;
+    private JButton backNavigationButton;
+    private JLabel feedbackLabel;
+    private JLabel vehicleSummaryLabel;
 
-    private JComboBox<Vehicle> vehicleComboBox;
-    private JTextField daysField;
-
-    private JButton rentButton;
-    private JButton clearButton;
-    private JButton backButton;
-
-    private JLabel messageLabel;
-    private JLabel selectedVehicleLabel;
-
-    private final VehicleService vehicleService =
-            new VehicleService(new VehicleRepository());
-
-    private final RentalService rentalService =
-            new RentalService(new EmailNotificationService());
+    // Services
+    private final VehicleService vehicleService = new VehicleService(new VehicleRepository());
+    private final RentalService rentalService = new RentalService(new EmailNotificationService());
 
     public RentVehicleFrame() {
-        initializeFrame();
-
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(PAGE_BG);
-
-        mainPanel.add(createHeader(), BorderLayout.NORTH);
-        mainPanel.add(createCenter(), BorderLayout.CENTER);
-        mainPanel.add(createFooter(), BorderLayout.SOUTH);
-
-        add(mainPanel);
-
-        loadVehicles();
-        initializeEvents();
-
+        configureFrame();
+        buildUI();
+        bindEvents();
+        refreshVehicleList();
         setVisible(true);
     }
 
-    private void initializeFrame() {
-        setTitle(TITLE_RENT_VEHICLE);
+    private void configureFrame() {
+        setTitle("Rent Vehicle");
         setSize(980, 650);
         setLocationRelativeTo(null);
         setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    private JPanel createHeader() {
-        GradientPanel header = new GradientPanel(NAVY, NAVY_LIGHT);
-        header.setLayout(new BorderLayout());
-        header.setBorder(new EmptyBorder(24, 36, 24, 36));
+    private void buildUI() {
+        JPanel rootContainer = new JPanel(new BorderLayout());
+        rootContainer.setBackground(BACKGROUND_COLOR);
 
-        JPanel titlePanel = createYBoxPanel();
+        rootContainer.add(buildHeaderSection(), BorderLayout.NORTH);
+        rootContainer.add(buildMainSection(), BorderLayout.CENTER);
+        rootContainer.add(buildFooterSection(), BorderLayout.SOUTH);
 
-        JLabel title = createStandardLabel(TITLE_RENT_VEHICLE, Font.BOLD, 32, Color.WHITE, Component.LEFT_ALIGNMENT);
-        JLabel subtitle = createStandardLabel("Create a new rental transaction in a simple and organized way", Font.PLAIN, 15, new Color(220, 235, 245), Component.LEFT_ALIGNMENT);
-
-        titlePanel.add(title);
-        titlePanel.add(Box.createVerticalStrut(5));
-        titlePanel.add(subtitle);
-
-        header.add(titlePanel, BorderLayout.WEST);
-
-        backButton = createButton("Back", RED, 110, 42);
-        header.add(backButton, BorderLayout.EAST);
-
-        return header;
+        setContentPane(rootContainer);
     }
 
-    private JPanel createCenter() {
-        JPanel background = new JPanel(new GridBagLayout());
-        background.setBackground(PAGE_BG);
-        background.setBorder(new EmptyBorder(32, 42, 32, 42));
+    private JPanel buildHeaderSection() {
+        JPanel headerPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setPaint(new GradientPaint(0, 0, PRIMARY_NAVY, getWidth(), getHeight(), SECONDARY_NAVY));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        headerPanel.setBorder(new EmptyBorder(24, 36, 24, 36));
 
-        RoundedPanel mainCard = new RoundedPanel(28, CARD_BG);
-        mainCard.setLayout(new BorderLayout());
-        mainCard.setBorder(new EmptyBorder(30, 30, 30, 30));
-        mainCard.setPreferredSize(new Dimension(820, 410));
+        JPanel titleGroup = new JPanel();
+        titleGroup.setOpaque(false);
+        titleGroup.setLayout(new BoxLayout(titleGroup, BoxLayout.Y_AXIS));
 
-        JPanel content = new JPanel(new GridLayout(1, 2, 28, 0));
-        content.setOpaque(false);
+        JLabel titleText = createCustomLabel("Rent Vehicle", Font.BOLD, 32, Color.WHITE);
+        JLabel subtitleText = createCustomLabel("Create a new rental transaction in a simple and organized way", Font.PLAIN, 15, new Color(220, 235, 245));
 
-        content.add(createInfoPanel());
-        content.add(createFormPanel());
+        titleGroup.add(titleText);
+        titleGroup.add(Box.createVerticalStrut(5));
+        titleGroup.add(subtitleText);
 
-        mainCard.add(content, BorderLayout.CENTER);
-        background.add(mainCard);
+        backNavigationButton = createActionButton("Back", DANGER_RED, 110, 42);
 
-        return background;
+        headerPanel.add(titleGroup, BorderLayout.WEST);
+        headerPanel.add(backNavigationButton, BorderLayout.EAST);
+
+        return headerPanel;
     }
 
-    private JPanel createInfoPanel() {
-        RoundedPanel panel = new RoundedPanel(24, new Color(236, 245, 252));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(new EmptyBorder(30, 28, 30, 28));
+    private JPanel buildMainSection() {
+        JPanel centerWrapper = new JPanel(new GridBagLayout());
+        centerWrapper.setBackground(BACKGROUND_COLOR);
+        centerWrapper.setBorder(new EmptyBorder(32, 42, 32, 42));
 
-        JLabel title = createStandardLabel("Rental Summary", Font.BOLD, 24, NAVY, Component.LEFT_ALIGNMENT);
-        JLabel subtitle = createStandardLabel("Select a vehicle and enter valid rental days.", Font.PLAIN, 14, TEXT_GRAY, Component.LEFT_ALIGNMENT);
+        JPanel cardContainer = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(0, 0, 0, 14));
+                g2.fillRoundRect(6, 6, getWidth() - 12, getHeight() - 12, 28, 28);
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(0, 0, getWidth() - 12, getHeight() - 12, 28, 28);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        cardContainer.setOpaque(false);
+        cardContainer.setBorder(new EmptyBorder(30, 30, 30, 30));
+        cardContainer.setPreferredSize(new Dimension(820, 410));
 
-        panel.add(title);
-        panel.add(Box.createVerticalStrut(8));
-        panel.add(subtitle);
-        panel.add(Box.createVerticalStrut(28));
+        JPanel splitLayout = new JPanel(new GridLayout(1, 2, 28, 0));
+        splitLayout.setOpaque(false);
 
-        selectedVehicleLabel = createStandardLabel("<html><b>Selected Vehicle:</b><br>No vehicle selected yet</html>", Font.PLAIN, 15, TEXT_DARK, Component.LEFT_ALIGNMENT);
-        panel.add(selectedVehicleLabel);
-        panel.add(Box.createVerticalStrut(28));
+        splitLayout.add(buildSummarySubPanel());
+        splitLayout.add(buildInputSubPanel());
 
-        panel.add(createRuleLabel("Rental days must be greater than zero."));
-        panel.add(Box.createVerticalStrut(12));
-        panel.add(createRuleLabel("Only available vehicles can be rented."));
-        panel.add(Box.createVerticalStrut(12));
-        panel.add(createRuleLabel("After renting, the vehicle is removed from the list."));
+        cardContainer.add(splitLayout, BorderLayout.CENTER);
+        centerWrapper.add(cardContainer);
 
-        panel.add(Box.createVerticalGlue());
-
-        JLabel note = createStandardLabel("SB Car Rental", Font.BOLD, 15, NAVY, Component.LEFT_ALIGNMENT);
-        panel.add(note);
-
-        return panel;
+        return centerWrapper;
     }
 
-    private JPanel createFormPanel() {
-        JPanel panel = createYBoxPanel();
+    private JPanel buildSummarySubPanel() {
+        JPanel summaryBox = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(236, 245, 252));
+                g2.fillRoundRect(0, 0, getWidth() - 12, getHeight() - 12, 24, 24);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        summaryBox.setOpaque(false);
+        summaryBox.setLayout(new BoxLayout(summaryBox, BoxLayout.Y_AXIS));
+        summaryBox.setBorder(new EmptyBorder(30, 28, 30, 28));
 
-        JLabel formTitle = createStandardLabel("Rental Details", Font.BOLD, 24, TEXT_DARK, Component.LEFT_ALIGNMENT);
-        JLabel formSubtitle = createStandardLabel("Fill the information below to rent a vehicle.", Font.PLAIN, 14, TEXT_GRAY, Component.LEFT_ALIGNMENT);
+        summaryBox.add(createCustomLabel("Rental Summary", Font.BOLD, 24, PRIMARY_NAVY));
+        summaryBox.add(Box.createVerticalStrut(8));
+        summaryBox.add(createCustomLabel("Select a vehicle and enter valid rental days.", Font.PLAIN, 14, TEXT_MUTED));
+        summaryBox.add(Box.createVerticalStrut(28));
 
-        panel.add(formTitle);
-        panel.add(Box.createVerticalStrut(8));
-        panel.add(formSubtitle);
-        panel.add(Box.createVerticalStrut(28));
+        vehicleSummaryLabel = createCustomLabel("<html><b>Selected Vehicle:</b><br>No vehicle selected yet</html>", Font.PLAIN, 15, TEXT_PRIMARY);
+        summaryBox.add(vehicleSummaryLabel);
+        summaryBox.add(Box.createVerticalStrut(28));
 
-        JLabel vehicleLabel = createInputLabel("Select Vehicle");
-        panel.add(vehicleLabel);
-        panel.add(Box.createVerticalStrut(8));
+        summaryBox.add(createCustomLabel("• Rental days must be greater than zero.", Font.PLAIN, 14, TEXT_PRIMARY));
+        summaryBox.add(Box.createVerticalStrut(12));
+        summaryBox.add(createCustomLabel("• Only available vehicles can be rented.", Font.PLAIN, 14, TEXT_PRIMARY));
+        summaryBox.add(Box.createVerticalStrut(12));
+        summaryBox.add(createCustomLabel("• After renting, the vehicle is removed from the list.", Font.PLAIN, 14, TEXT_PRIMARY));
 
-        vehicleComboBox = new JComboBox<>();
-        vehicleComboBox.setMaximumSize(new Dimension(360, 44));
-        vehicleComboBox.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        vehicleComboBox.setBackground(Color.WHITE);
-        vehicleComboBox.setRenderer(new VehicleRenderer());
-        vehicleComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.add(vehicleComboBox);
+        summaryBox.add(Box.createVerticalGlue());
+        summaryBox.add(createCustomLabel("SB Car Rental", Font.BOLD, 15, PRIMARY_NAVY));
 
-        panel.add(Box.createVerticalStrut(22));
-
-        JLabel daysLabel = createInputLabel("Rental Days");
-        panel.add(daysLabel);
-        panel.add(Box.createVerticalStrut(8));
-
-        daysField = createTextField();
-        panel.add(daysField);
-
-        panel.add(Box.createVerticalStrut(18));
-
-        messageLabel = createStandardLabel(" ", Font.BOLD, 14, RED, Component.LEFT_ALIGNMENT);
-        panel.add(messageLabel);
-
-        panel.add(Box.createVerticalStrut(16));
-
-        JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, 14, 0));
-        buttonsPanel.setOpaque(false);
-        buttonsPanel.setMaximumSize(new Dimension(360, 44));
-        buttonsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        rentButton = createButton("Rent Vehicle", GREEN, 160, 44);
-        clearButton = createButton("Clear", BLUE, 160, 44);
-
-        buttonsPanel.add(rentButton);
-        buttonsPanel.add(clearButton);
-
-        panel.add(buttonsPanel);
-
-        return panel;
+        return summaryBox;
     }
 
-    private JPanel createFooter() {
-        JPanel footer = new JPanel();
-        footer.setBackground(new Color(248, 249, 250));
-        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
+    private JPanel buildInputSubPanel() {
+        JPanel inputForm = new JPanel();
+        inputForm.setOpaque(false);
+        inputForm.setLayout(new BoxLayout(inputForm, BoxLayout.Y_AXIS));
 
-        JLabel label = createStandardLabel("SB Car Rental Management System", Font.PLAIN, 13, TEXT_GRAY, Component.CENTER_ALIGNMENT);
-        footer.add(label);
+        inputForm.add(createCustomLabel("Rental Details", Font.BOLD, 24, TEXT_PRIMARY));
+        inputForm.add(Box.createVerticalStrut(8));
+        inputForm.add(createCustomLabel("Fill the information below to rent a vehicle.", Font.PLAIN, 14, TEXT_MUTED));
+        inputForm.add(Box.createVerticalStrut(28));
 
-        return footer;
+        inputForm.add(createCustomLabel("Select Vehicle", Font.BOLD, 15, TEXT_PRIMARY));
+        inputForm.add(Box.createVerticalStrut(8));
+
+        vehicleSelector = new JComboBox<>();
+        vehicleSelector.setMaximumSize(new Dimension(360, 44));
+        vehicleSelector.setFont(new Font(FONT_FAMILY, Font.PLAIN, 15));
+        vehicleSelector.setBackground(Color.WHITE);
+        vehicleSelector.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        vehicleSelector.setRenderer((list, val, idx, isSel, cellHasFocus) -> {
+            JLabel cell = new JLabel();
+            cell.setOpaque(true);
+            cell.setFont(new Font(FONT_FAMILY, Font.PLAIN, 15));
+            cell.setBackground(isSel ? list.getSelectionBackground() : list.getBackground());
+            cell.setForeground(isSel ? list.getSelectionForeground() : list.getForeground());
+
+            if (val != null) {
+                cell.setText(String.format("%s - %s %s (%s)",
+                        val.getId(),
+                        val.getBrand(),
+                        val.getModel(),
+                        val.getClass().getSimpleName()));
+            }
+
+            return cell;
+        });
+
+        inputForm.add(vehicleSelector);
+        inputForm.add(Box.createVerticalStrut(22));
+
+        inputForm.add(createCustomLabel("Rental Days", Font.BOLD, 15, TEXT_PRIMARY));
+        inputForm.add(Box.createVerticalStrut(8));
+
+        rentalDaysInput = new JTextField();
+        rentalDaysInput.setMaximumSize(new Dimension(360, 44));
+        rentalDaysInput.setFont(new Font(FONT_FAMILY, Font.PLAIN, 15));
+        rentalDaysInput.setForeground(TEXT_PRIMARY);
+        rentalDaysInput.setCaretColor(ACCENT_BLUE);
+        rentalDaysInput.setBorder(new CompoundBorder(
+                new LineBorder(new Color(190, 210, 225), 1),
+                new EmptyBorder(8, 12, 8, 12)
+        ));
+        rentalDaysInput.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        inputForm.add(rentalDaysInput);
+        inputForm.add(Box.createVerticalStrut(18));
+
+        feedbackLabel = createCustomLabel(" ", Font.BOLD, 14, DANGER_RED);
+        inputForm.add(feedbackLabel);
+        inputForm.add(Box.createVerticalStrut(16));
+
+        JPanel actionGroup = new JPanel(new GridLayout(1, 2, 14, 0));
+        actionGroup.setOpaque(false);
+        actionGroup.setMaximumSize(new Dimension(360, 44));
+        actionGroup.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        submitButton = createActionButton("Rent Vehicle", SUCCESS_GREEN, 160, 44);
+        resetButton = createActionButton("Clear", ACCENT_BLUE, 160, 44);
+
+        actionGroup.add(submitButton);
+        actionGroup.add(resetButton);
+
+        inputForm.add(actionGroup);
+
+        return inputForm;
     }
 
-    // --- Helper Methods ---
+    private JPanel buildFooterSection() {
+        JPanel footerPanel = new JPanel();
+        footerPanel.setBackground(new Color(248, 249, 250));
+        footerPanel.setBorder(new EmptyBorder(12, 0, 12, 0));
 
-    private JPanel createYBoxPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        return panel;
+        JLabel copyrightText = createCustomLabel("SB Car Rental Management System", Font.PLAIN, 13, TEXT_MUTED);
+        copyrightText.setAlignmentX(Component.CENTER_ALIGNMENT);
+        footerPanel.add(copyrightText);
+
+        return footerPanel;
     }
 
-    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color, float alignmentX) {
+    // --- Helper UI Builders ---
+
+    private JLabel createCustomLabel(String text, int style, int size, Color color) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
+        label.setFont(new Font(FONT_FAMILY, style, size));
         label.setForeground(color);
-        label.setAlignmentX(alignmentX);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
         return label;
     }
 
-    private JLabel createRuleLabel(String text) {
-        return createStandardLabel("• " + text, Font.PLAIN, 14, TEXT_DARK, Component.LEFT_ALIGNMENT);
-    }
+    private JButton createActionButton(String text, Color baseColor, int width, int height) {
+        JButton btn = new JButton(text);
+        btn.setPreferredSize(new Dimension(width, height));
+        btn.setBackground(baseColor);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font(FONT_FAMILY, Font.BOLD, 15));
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-    private JLabel createInputLabel(String text) {
-        return createStandardLabel(text, Font.BOLD, 15, TEXT_DARK, Component.LEFT_ALIGNMENT);
-    }
-
-    private JTextField createTextField() {
-        JTextField field = new JTextField();
-        field.setMaximumSize(new Dimension(360, 44));
-        field.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        field.setForeground(TEXT_DARK);
-        field.setCaretColor(BLUE);
-        field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(190, 210, 225), 1),
-                new EmptyBorder(8, 12, 8, 12)
-        ));
-        field.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return field;
-    }
-
-    private JButton createButton(String text, Color color, int width, int height) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(width, height));
-        button.setBackground(color);
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font(FONT_NAME, Font.BOLD, 15));
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        button.addMouseListener(new MouseAdapter() {
+        btn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                button.setBackground(color.darker());
+                btn.setBackground(baseColor.darker());
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(color);
+                btn.setBackground(baseColor);
             }
         });
 
-        return button;
+        return btn;
     }
 
-    // --- Logic & Events ---
+    // --- Business Logic & Handlers ---
 
-    private void loadVehicles() {
-        vehicleComboBox.removeAllItems();
-
-        for (Vehicle vehicle : vehicleService.getAvailableVehicles()) {
-            vehicleComboBox.addItem(vehicle);
+    private void refreshVehicleList() {
+        vehicleSelector.removeAllItems();
+        for (Vehicle v : vehicleService.getAvailableVehicles()) {
+            vehicleSelector.addItem(v);
         }
 
-        updateSelectedVehicleInfo();
+        syncSelectedVehicleDisplay();
 
-        if (vehicleComboBox.getItemCount() == 0) {
-            showMessage("No available vehicles found.", false);
+        if (vehicleSelector.getItemCount() == 0) {
+            displayStatus("No available vehicles found.", false);
         }
     }
 
-    private void initializeEvents() {
-        rentButton.addActionListener(e -> rentVehicle());
-
-        clearButton.addActionListener(e -> clearFields());
-
-        backButton.addActionListener(e -> {
+    private void bindEvents() {
+        submitButton.addActionListener(e -> processRental());
+        resetButton.addActionListener(e -> resetFormFields());
+        backNavigationButton.addActionListener(e -> {
             dispose();
             new DashboardFrame();
         });
-
-        vehicleComboBox.addActionListener(e -> updateSelectedVehicleInfo());
+        vehicleSelector.addActionListener(e -> syncSelectedVehicleDisplay());
     }
 
-    private void updateSelectedVehicleInfo() {
-        Vehicle vehicle = (Vehicle) vehicleComboBox.getSelectedItem();
-
-        if (vehicle == null) {
-            selectedVehicleLabel.setText("<html><b>Selected Vehicle:</b><br>No vehicle selected yet</html>");
-            return;
+    private void syncSelectedVehicleDisplay() {
+        Vehicle target = (Vehicle) vehicleSelector.getSelectedItem();
+        if (target == null) {
+            vehicleSummaryLabel.setText("<html><b>Selected Vehicle:</b><br>No vehicle selected yet</html>");
+        } else {
+            vehicleSummaryLabel.setText(String.format("<html><b>Selected Vehicle:</b><br>%s - %s %s</html>",
+                    target.getId(), target.getBrand(), target.getModel()));
         }
-
-        selectedVehicleLabel.setText(
-                "<html><b>Selected Vehicle:</b><br>"
-                        + vehicle.getId()
-                        + " - "
-                        + vehicle.getBrand()
-                        + " "
-                        + vehicle.getModel()
-                        + "</html>"
-        );
     }
 
-    private void rentVehicle() {
-        Vehicle vehicle = (Vehicle) vehicleComboBox.getSelectedItem();
-
-        if (vehicle == null) {
-            showMessage("Please select a vehicle.", false);
+    private void processRental() {
+        Vehicle targetVehicle = (Vehicle) vehicleSelector.getSelectedItem();
+        if (targetVehicle == null) {
+            displayStatus("Please select a vehicle.", false);
             return;
         }
 
-        String daysText = daysField.getText().trim();
-
-        if (daysText.isEmpty()) {
-            showMessage("Please enter rental days.", false);
+        String rawDays = rentalDaysInput.getText().trim();
+        if (rawDays.isEmpty()) {
+            displayStatus("Please enter rental days.", false);
             return;
         }
-
-        int days;
 
         try {
-            days = Integer.parseInt(daysText);
-        } catch (NumberFormatException ex) {
-            showMessage("Rental days must be a valid number.", false);
-            return;
-        }
-
-        if (days <= 0) {
-            showMessage("Rental days must be greater than zero.", false);
-            return;
-        }
-
-        boolean success = rentalService.rentVehicle(vehicle, days);
-
-        if (success) {
-            showMessage("Vehicle rented successfully.", true);
-            daysField.setText("");
-            loadVehicles();
-        } else {
-            showMessage("Vehicle cannot be rented.", false);
-        }
-    }
-
-    private void clearFields() {
-        if (vehicleComboBox.getItemCount() > 0) {
-            vehicleComboBox.setSelectedIndex(0);
-        }
-
-        daysField.setText("");
-        messageLabel.setText(" ");
-        updateSelectedVehicleInfo();
-    }
-
-    private void showMessage(String message, boolean success) {
-        messageLabel.setForeground(success ? GREEN : RED);
-        messageLabel.setText(message);
-    }
-
-    // --- Custom Renderers & UI Panels ---
-
-    private static class VehicleRenderer extends DefaultListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(
-                JList<?> list,
-                Object value,
-                int index,
-                boolean isSelected,
-                boolean cellHasFocus
-        ) {
-            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-            if (value instanceof Vehicle vehicle) {
-                setText(
-                        vehicle.getId()
-                                + " - "
-                                + vehicle.getBrand()
-                                + " "
-                                + vehicle.getModel()
-                                + " ("
-                                + vehicle.getClass().getSimpleName()
-                                + ")"
-                );
+            int duration = Integer.parseInt(rawDays);
+            if (duration <= 0) {
+                displayStatus("Rental days must be greater than zero.", false);
+                return;
             }
 
-            setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-            return this;
+            if (rentalService.rentVehicle(targetVehicle, duration)) {
+                displayStatus("Vehicle rented successfully.", true);
+                rentalDaysInput.setText("");
+                refreshVehicleList();
+            } else {
+                displayStatus("Vehicle cannot be rented.", false);
+            }
+        } catch (NumberFormatException ex) {
+            displayStatus("Rental days must be a valid number.", false);
         }
     }
 
-    private static class RoundedPanel extends JPanel {
-
-        private final int radius;
-        private final Color backgroundColor;
-
-        public RoundedPanel(int radius, Color backgroundColor) {
-            this.radius = radius;
-            this.backgroundColor = backgroundColor;
-            setOpaque(false);
+    private void resetFormFields() {
+        if (vehicleSelector.getItemCount() > 0) {
+            vehicleSelector.setSelectedIndex(0);
         }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
-            g2.setColor(new Color(0, 0, 0, 14));
-            g2.fillRoundRect(6, 6, getWidth() - 12, getHeight() - 12, radius, radius);
-
-            g2.setColor(backgroundColor);
-            g2.fillRoundRect(0, 0, getWidth() - 12, getHeight() - 12, radius, radius);
-
-            g2.dispose();
-
-            super.paintComponent(g);
-        }
+        rentalDaysInput.setText("");
+        feedbackLabel.setText(" ");
+        syncSelectedVehicleDisplay();
     }
 
-    private static class GradientPanel extends JPanel {
-
-        private final Color startColor;
-        private final Color endColor;
-
-        public GradientPanel(Color startColor, Color endColor) {
-            this.startColor = startColor;
-            this.endColor = endColor;
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            Graphics2D g2 = (Graphics2D) g;
-
-            GradientPaint gradient = new GradientPaint(
-                    0, 0, startColor,
-                    getWidth(), getHeight(), endColor
-            );
-
-            g2.setPaint(gradient);
-            g2.fillRect(0, 0, getWidth(), getHeight());
-        }
+    private void displayStatus(String message, boolean isSuccess) {
+        feedbackLabel.setForeground(isSuccess ? SUCCESS_GREEN : DANGER_RED);
+        feedbackLabel.setText(message);
     }
 }
