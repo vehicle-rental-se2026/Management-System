@@ -3,15 +3,14 @@ package com.vehiclerental.presentation;
 import com.vehiclerental.domain.Rental;
 import com.vehiclerental.domain.Vehicle;
 import com.vehiclerental.notification.EmailNotificationService;
-import com.vehiclerental.repository.VehicleRepository;
 import com.vehiclerental.service.RentalService;
-import com.vehiclerental.service.VehicleService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 /**
  * The RentalReminderFrame class provides the user
  * interface for sending rental reminder
@@ -38,9 +37,6 @@ public class RentalReminderFrame extends JFrame {
     private JLabel messageLabel;
     private JLabel selectedVehicleLabel;
     private JLabel availableVehiclesLabel;
-
-    private final VehicleService vehicleService =
-            new VehicleService(new VehicleRepository());
 
     private final RentalService rentalService =
             new RentalService(new EmailNotificationService());
@@ -213,6 +209,7 @@ public class RentalReminderFrame extends JFrame {
         vehicleComboBox.setBackground(Color.WHITE);
         vehicleComboBox.setRenderer(new VehicleRenderer());
         vehicleComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         panel.add(vehicleComboBox);
 
         panel.add(Box.createVerticalStrut(22));
@@ -221,6 +218,7 @@ public class RentalReminderFrame extends JFrame {
         messageLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
         messageLabel.setForeground(RED);
         messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         panel.add(messageLabel);
 
         panel.add(Box.createVerticalStrut(18));
@@ -288,16 +286,13 @@ public class RentalReminderFrame extends JFrame {
     }
 
     private void loadVehicles() {
-
         vehicleComboBox.removeAllItems();
 
         int count = 0;
 
         for (Rental rental : rentalService.getActiveRentals()) {
-
             vehicleComboBox.addItem(rental.getVehicle());
             count++;
-
         }
 
         availableVehiclesLabel.setText("Active Rentals: " + count);
@@ -309,7 +304,6 @@ public class RentalReminderFrame extends JFrame {
         } else {
             messageLabel.setText(" ");
         }
-
     }
 
     private void initializeEvents() {

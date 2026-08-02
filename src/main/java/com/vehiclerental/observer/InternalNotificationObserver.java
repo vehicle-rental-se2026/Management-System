@@ -1,5 +1,6 @@
 package com.vehiclerental.observer;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -14,6 +15,7 @@ public class InternalNotificationObserver implements NotificationObserver {
 
     @Override
     public void update(String message) {
-        LOGGER.info("Internal Notification: " + message);
+        LOGGER.log(Level.INFO, "Internal Notification: {0}", message);
     }
+
 }

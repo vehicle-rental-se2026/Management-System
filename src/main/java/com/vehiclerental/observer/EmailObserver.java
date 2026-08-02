@@ -1,5 +1,6 @@
 package com.vehiclerental.observer;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -13,6 +14,7 @@ public class EmailObserver implements NotificationObserver {
 
     @Override
     public void update(String message) {
-        LOGGER.info("Email Notification: " + message);
+        LOGGER.log(Level.INFO, "Email Notification: {0}", message);
     }
+
 }

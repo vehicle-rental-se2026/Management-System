@@ -1,5 +1,6 @@
 package com.vehiclerental.notification;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -14,6 +15,7 @@ public class EmailNotificationService implements NotificationService {
 
     @Override
     public void sendReminder(String message) {
-        LOGGER.info("Reminder Email: " + message);
+        LOGGER.log(Level.INFO, "Reminder Email: {0}", message);
     }
+
 }
