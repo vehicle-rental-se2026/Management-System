@@ -10,48 +10,48 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 /**
  * ReturnVehicleFrame handles the check-in and status restoration for rented vehicles.
  */
 public class ReturnVehicleFrame extends JFrame {
 
-    // Visual Palette & Constants
-    private static final String FONT_FAMILY_NAME = "Segoe UI";
-    private static final String APP_COPYRIGHT_TEXT = "SB Car Rental Management System";
+    // Palette & Visual Configuration
+    private static final String APP_FONT_NAME = "Segoe UI";
+    private static final String FOOTER_NOTE_TEXT = "SB Car Rental Management System";
 
-    private static final Color HEADER_NAVY_START = new Color(18, 54, 82);
-    private static final Color HEADER_NAVY_END = new Color(35, 92, 132);
-    private static final Color VIEW_BG_COLOR = new Color(244, 248, 252);
-    private static final Color CONTENT_DARK_TEXT = new Color(33, 37, 41);
-    private static final Color MUTED_SUB_TEXT = new Color(108, 117, 125);
-    private static final Color COLOR_CONFIRM_GREEN = new Color(78, 150, 120);
-    private static final Color COLOR_INFO_BLUE = new Color(65, 130, 190);
-    private static final Color COLOR_ALERT_RED = new Color(214, 80, 80);
+    private static final Color PRIMARY_NAVY_DARK = new Color(18, 54, 82);
+    private static final Color PRIMARY_NAVY_LIGHT = new Color(35, 92, 132);
+    private static final Color BACKGROUND_BASE = new Color(244, 248, 252);
+    private static final Color TEXT_DARK_BODY = new Color(33, 37, 41);
+    private static final Color TEXT_MUTED_LABEL = new Color(108, 117, 125);
+    private static final Color STATE_SUCCESS_GREEN = new Color(78, 150, 120);
+    private static final Color STATE_INFO_BLUE = new Color(65, 130, 190);
+    private static final Color STATE_DANGER_RED = new Color(214, 80, 80);
 
-    // Interactive UI Elements
-    private JComboBox<Rental> activeRentalsDropdown;
-    private JButton confirmReturnBtn;
-    private JButton refreshDataBtn;
-    private JButton navigateHomeBtn;
+    // Form Controls & Labels
+    private JComboBox<Rental> rentalSelectorCombo;
+    private JButton executeReturnButton;
+    private JButton syncDataButton;
+    private JButton backNavigationButton;
+    private JLabel feedbackNoticeLabel;
+    private JLabel selectedSummaryLabel;
+    private JLabel activeRentalsCountLabel;
 
-    private JLabel statusNotificationLbl;
-    private JLabel currentRentalDetailsLbl;
-    private JLabel totalActiveCountLbl;
-
-    // Repositories & Services
-    private final RentalRepository rentalDataRepository = new RentalRepository();
-    private final RentalService rentalExecutionService = new RentalService(new EmailNotificationService());
+    // Domain Services
+    private final RentalRepository rentalDataStore = new RentalRepository();
+    private final RentalService vehicleRentalManager = new RentalService(new EmailNotificationService());
 
     public ReturnVehicleFrame() {
-        configureMainFrameSettings();
-        buildApplicationLayout();
-        attachEventListeners();
-        loadActiveRentalsData();
+        initWindowFrameProperties();
+        assembleFrameComponents();
+        bindViewListeners();
+        fetchActiveRentalsList();
         setVisible(true);
     }
 
-    private void configureMainFrameSettings() {
+    private void initWindowFrameProperties() {
         setTitle("Return Vehicle");
         setSize(980, 650);
         setLocationRelativeTo(null);
@@ -59,54 +59,54 @@ public class ReturnVehicleFrame extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    private void buildApplicationLayout() {
-        JPanel outerCanvas = new JPanel(new BorderLayout());
-        outerCanvas.setBackground(VIEW_BG_COLOR);
+    private void assembleFrameComponents() {
+        JPanel rootContainer = new JPanel(new BorderLayout());
+        rootContainer.setBackground(BACKGROUND_BASE);
 
-        outerCanvas.add(constructHeaderSection(), BorderLayout.NORTH);
-        outerCanvas.add(constructBodySection(), BorderLayout.CENTER);
-        outerCanvas.add(constructFooterSection(), BorderLayout.SOUTH);
+        rootContainer.add(buildTopHeaderBar(), BorderLayout.NORTH);
+        rootContainer.add(buildMainWorkspace(), BorderLayout.CENTER);
+        rootContainer.add(buildBottomFooterBar(), BorderLayout.SOUTH);
 
-        setContentPane(outerCanvas);
+        setContentPane(rootContainer);
     }
 
-    private JPanel constructHeaderSection() {
-        JPanel headerPanel = new JPanel(new BorderLayout()) {
+    private JPanel buildTopHeaderBar() {
+        JPanel headerHolder = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setPaint(new GradientPaint(0, 0, HEADER_NAVY_START, getWidth(), getHeight(), HEADER_NAVY_END));
-                g2d.fillRect(0, 0, getWidth(), getHeight());
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setPaint(new GradientPaint(0, 0, PRIMARY_NAVY_DARK, getWidth(), getHeight(), PRIMARY_NAVY_LIGHT));
+                g2.fillRect(0, 0, getWidth(), getHeight());
             }
         };
-        headerPanel.setBorder(new EmptyBorder(24, 36, 24, 36));
+        headerHolder.setBorder(new EmptyBorder(24, 36, 24, 36));
 
-        JPanel titleStack = new JPanel();
-        titleStack.setOpaque(false);
-        titleStack.setLayout(new BoxLayout(titleStack, BoxLayout.Y_AXIS));
+        JPanel headlineGroup = new JPanel();
+        headlineGroup.setOpaque(false);
+        headlineGroup.setLayout(new BoxLayout(headlineGroup, BoxLayout.Y_AXIS));
 
-        JLabel pageHeading = createCustomText("Return Vehicle", Font.BOLD, 32, Color.WHITE);
-        JLabel pageSubHeading = createCustomText("Complete a rental return and update the vehicle status", Font.PLAIN, 15, new Color(220, 235, 245));
+        JLabel mainHeading = generateTextComponent("Return Vehicle", Font.BOLD, 32, Color.WHITE);
+        JLabel subHeading = generateTextComponent("Complete a rental return and update the vehicle status", Font.PLAIN, 15, new Color(220, 235, 245));
 
-        titleStack.add(pageHeading);
-        titleStack.add(Box.createVerticalStrut(5));
-        titleStack.add(pageSubHeading);
+        headlineGroup.add(mainHeading);
+        headlineGroup.add(Box.createVerticalStrut(5));
+        headlineGroup.add(subHeading);
 
-        navigateHomeBtn = buildColoredButton("Back", COLOR_ALERT_RED, 110, 42);
+        backNavigationButton = generateActionButton("Back", STATE_DANGER_RED, 110, 42);
 
-        headerPanel.add(titleStack, BorderLayout.WEST);
-        headerPanel.add(navigateHomeBtn, BorderLayout.EAST);
+        headerHolder.add(headlineGroup, BorderLayout.WEST);
+        headerHolder.add(backNavigationButton, BorderLayout.EAST);
 
-        return headerPanel;
+        return headerHolder;
     }
 
-    private JPanel constructBodySection() {
-        JPanel centerGrid = new JPanel(new GridBagLayout());
-        centerGrid.setBackground(VIEW_BG_COLOR);
-        centerGrid.setBorder(new EmptyBorder(32, 42, 32, 42));
+    private JPanel buildMainWorkspace() {
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.setBackground(BACKGROUND_BASE);
+        wrapper.setBorder(new EmptyBorder(32, 42, 32, 42));
 
-        JPanel elevatedCard = new JPanel(new BorderLayout()) {
+        JPanel innerCard = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -119,24 +119,24 @@ public class ReturnVehicleFrame extends JFrame {
                 super.paintComponent(g);
             }
         };
-        elevatedCard.setOpaque(false);
-        elevatedCard.setBorder(new EmptyBorder(30, 30, 30, 30));
-        elevatedCard.setPreferredSize(new Dimension(820, 410));
+        innerCard.setOpaque(false);
+        innerCard.setBorder(new EmptyBorder(30, 30, 30, 30));
+        innerCard.setPreferredSize(new Dimension(820, 410));
 
-        JPanel splitColumns = new JPanel(new GridLayout(1, 2, 28, 0));
-        splitColumns.setOpaque(false);
+        JPanel dualColumns = new JPanel(new GridLayout(1, 2, 28, 0));
+        dualColumns.setOpaque(false);
 
-        splitColumns.add(constructOverviewPanel());
-        splitColumns.add(constructFormPanel());
+        dualColumns.add(buildLeftOverviewSection());
+        dualColumns.add(buildRightFormSection());
 
-        elevatedCard.add(splitColumns, BorderLayout.CENTER);
-        centerGrid.add(elevatedCard);
+        innerCard.add(dualColumns, BorderLayout.CENTER);
+        wrapper.add(innerCard);
 
-        return centerGrid;
+        return wrapper;
     }
 
-    private JPanel constructOverviewPanel() {
-        JPanel summaryBox = new JPanel() {
+    private JPanel buildLeftOverviewSection() {
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -147,204 +147,195 @@ public class ReturnVehicleFrame extends JFrame {
                 super.paintComponent(g);
             }
         };
-        summaryBox.setOpaque(false);
-        summaryBox.setLayout(new BoxLayout(summaryBox, BoxLayout.Y_AXIS));
-        summaryBox.setBorder(new EmptyBorder(30, 28, 30, 28));
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(new EmptyBorder(30, 28, 30, 28));
 
-        summaryBox.add(createCustomText("Return Summary", Font.BOLD, 24, HEADER_NAVY_START));
-        summaryBox.add(Box.createVerticalStrut(8));
-        summaryBox.add(createCustomText("Select an active rental and complete the return.", Font.PLAIN, 14, MUTED_SUB_TEXT));
-        summaryBox.add(Box.createVerticalStrut(28));
+        panel.add(generateTextComponent("Return Summary", Font.BOLD, 24, PRIMARY_NAVY_DARK));
+        panel.add(Box.createVerticalStrut(8));
+        panel.add(generateTextComponent("Select an active rental and complete the return.", Font.PLAIN, 14, TEXT_MUTED_LABEL));
+        panel.add(Box.createVerticalStrut(28));
 
-        totalActiveCountLbl = createCustomText("Active Rentals: 0", Font.BOLD, 18, COLOR_CONFIRM_GREEN);
-        summaryBox.add(totalActiveCountLbl);
-        summaryBox.add(Box.createVerticalStrut(26));
+        activeRentalsCountLabel = generateTextComponent("Active Rentals: 0", Font.BOLD, 18, STATE_SUCCESS_GREEN);
+        panel.add(activeRentalsCountLabel);
+        panel.add(Box.createVerticalStrut(26));
 
-        currentRentalDetailsLbl = createCustomText("<html><b>Selected Rental:</b><br>No rental selected yet</html>", Font.PLAIN, 15, CONTENT_DARK_TEXT);
-        summaryBox.add(currentRentalDetailsLbl);
-        summaryBox.add(Box.createVerticalStrut(28));
+        selectedSummaryLabel = generateTextComponent("<html><b>Selected Rental:</b><br>No rental selected yet</html>", Font.PLAIN, 15, TEXT_DARK_BODY);
+        panel.add(selectedSummaryLabel);
+        panel.add(Box.createVerticalStrut(28));
 
-        summaryBox.add(createCustomText("• Only active rentals can be returned.", Font.PLAIN, 14, CONTENT_DARK_TEXT));
-        summaryBox.add(Box.createVerticalStrut(12));
-        summaryBox.add(createCustomText("• After return, the rental becomes inactive.", Font.PLAIN, 14, CONTENT_DARK_TEXT));
-        summaryBox.add(Box.createVerticalStrut(12));
-        summaryBox.add(createCustomText("• The vehicle becomes available again.", Font.PLAIN, 14, CONTENT_DARK_TEXT));
+        panel.add(generateTextComponent("• Only active rentals can be returned.", Font.PLAIN, 14, TEXT_DARK_BODY));
+        panel.add(Box.createVerticalStrut(12));
+        panel.add(generateTextComponent("• After return, the rental becomes inactive.", Font.PLAIN, 14, TEXT_DARK_BODY));
+        panel.add(Box.createVerticalStrut(12));
+        panel.add(generateTextComponent("• The vehicle becomes available again.", Font.PLAIN, 14, TEXT_DARK_BODY));
+        panel.add(Box.createVerticalGlue());
 
-        summaryBox.add(Box.createVerticalGlue());
-        summaryBox.add(createCustomText("SB Car Rental", Font.BOLD, 15, HEADER_NAVY_START));
+        panel.add(generateTextComponent("SB Car Rental", Font.BOLD, 15, PRIMARY_NAVY_DARK));
 
-        return summaryBox;
+        return panel;
     }
 
-    private JPanel constructFormPanel() {
-        JPanel formStack = new JPanel();
-        formStack.setOpaque(false);
-        formStack.setLayout(new BoxLayout(formStack, BoxLayout.Y_AXIS));
+    private JPanel buildRightFormSection() {
+        JPanel formLayout = new JPanel();
+        formLayout.setOpaque(false);
+        formLayout.setLayout(new BoxLayout(formLayout, BoxLayout.Y_AXIS));
 
-        formStack.add(createCustomText("Return Details", Font.BOLD, 24, CONTENT_DARK_TEXT));
-        formStack.add(Box.createVerticalStrut(8));
-        formStack.add(createCustomText("Choose the rental you want to return.", Font.PLAIN, 14, MUTED_SUB_TEXT));
-        formStack.add(Box.createVerticalStrut(32));
+        formLayout.add(generateTextComponent("Return Details", Font.BOLD, 24, TEXT_DARK_BODY));
+        formLayout.add(Box.createVerticalStrut(8));
+        formLayout.add(generateTextComponent("Choose the rental you want to return.", Font.PLAIN, 14, TEXT_MUTED_LABEL));
+        formLayout.add(Box.createVerticalStrut(32));
 
-        formStack.add(createCustomText("Select Rental", Font.BOLD, 15, CONTENT_DARK_TEXT));
-        formStack.add(Box.createVerticalStrut(8));
+        formLayout.add(generateTextComponent("Select Rental", Font.BOLD, 15, TEXT_DARK_BODY));
+        formLayout.add(Box.createVerticalStrut(8));
 
-        activeRentalsDropdown = new JComboBox<>();
-        activeRentalsDropdown.setMaximumSize(new Dimension(360, 44));
-        activeRentalsDropdown.setFont(new Font(FONT_FAMILY_NAME, Font.PLAIN, 15));
-        activeRentalsDropdown.setBackground(Color.WHITE);
-        activeRentalsDropdown.setAlignmentX(Component.LEFT_ALIGNMENT);
+        rentalSelectorCombo = new JComboBox<>();
+        rentalSelectorCombo.setMaximumSize(new Dimension(360, 44));
+        rentalSelectorCombo.setFont(new Font(APP_FONT_NAME, Font.PLAIN, 15));
+        rentalSelectorCombo.setBackground(Color.WHITE);
+        rentalSelectorCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        activeRentalsDropdown.setRenderer((list, val, idx, isSel, cellHasFocus) -> {
-            JLabel rowCell = new JLabel();
-            rowCell.setOpaque(true);
-            rowCell.setFont(new Font(FONT_FAMILY_NAME, Font.PLAIN, 15));
-            rowCell.setBackground(isSel ? list.getSelectionBackground() : list.getBackground());
-            rowCell.setForeground(isSel ? list.getSelectionForeground() : list.getForeground());
-
-            if (val != null) {
-                rowCell.setText(String.format("%s - %s %s | %d days",
-                        val.getVehicle().getId(),
-                        val.getVehicle().getBrand(),
-                        val.getVehicle().getModel(),
-                        val.getRentalDays()));
+        rentalSelectorCombo.setRenderer((list, item, index, isSelected, cellHasFocus) -> {
+            DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+            Component comp = renderer.getListCellRendererComponent(list, item, index, isSelected, cellHasFocus);
+            if (item instanceof Rental) {
+                Rental r = (Rental) item;
+                String display = String.format("%s - %s %s | %d days",
+                        r.getVehicle().getId(),
+                        r.getVehicle().getBrand(),
+                        r.getVehicle().getModel(),
+                        r.getRentalDays());
+                ((JLabel) comp).setText(display);
             }
-            return rowCell;
+            comp.setFont(new Font(APP_FONT_NAME, Font.PLAIN, 15));
+            return comp;
         });
 
-        formStack.add(activeRentalsDropdown);
-        formStack.add(Box.createVerticalStrut(22));
+        formLayout.add(rentalSelectorCombo);
+        formLayout.add(Box.createVerticalStrut(22));
 
-        statusNotificationLbl = createCustomText(" ", Font.BOLD, 14, COLOR_ALERT_RED);
-        formStack.add(statusNotificationLbl);
-        formStack.add(Box.createVerticalStrut(18));
+        feedbackNoticeLabel = generateTextComponent(" ", Font.BOLD, 14, STATE_DANGER_RED);
+        formLayout.add(feedbackNoticeLabel);
+        formLayout.add(Box.createVerticalStrut(18));
 
-        JPanel buttonBar = new JPanel(new GridLayout(1, 2, 14, 0));
-        buttonBar.setOpaque(false);
-        buttonBar.setMaximumSize(new Dimension(360, 44));
-        buttonBar.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JPanel actionsRow = new JPanel(new GridLayout(1, 2, 14, 0));
+        actionsRow.setOpaque(false);
+        actionsRow.setMaximumSize(new Dimension(360, 44));
+        actionsRow.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        confirmReturnBtn = buildColoredButton("Return Vehicle", COLOR_CONFIRM_GREEN, 160, 44);
-        refreshDataBtn = buildColoredButton("Refresh", COLOR_INFO_BLUE, 160, 44);
+        executeReturnButton = generateActionButton("Return Vehicle", STATE_SUCCESS_GREEN, 160, 44);
+        syncDataButton = generateActionButton("Refresh", STATE_INFO_BLUE, 160, 44);
 
-        buttonBar.add(confirmReturnBtn);
-        buttonBar.add(refreshDataBtn);
+        actionsRow.add(executeReturnButton);
+        actionsRow.add(syncDataButton);
 
-        formStack.add(buttonBar);
+        formLayout.add(actionsRow);
 
-        return formStack;
+        return formLayout;
     }
 
-    private JPanel constructFooterSection() {
-        JPanel footerBar = new JPanel();
-        footerBar.setBackground(new Color(248, 249, 250));
-        footerBar.setBorder(new EmptyBorder(12, 0, 12, 0));
+    private JPanel buildBottomFooterBar() {
+        JPanel footer = new JPanel();
+        footer.setBackground(new Color(248, 249, 250));
+        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
 
-        JLabel brandNotice = createCustomText(APP_COPYRIGHT_TEXT, Font.PLAIN, 13, MUTED_SUB_TEXT);
-        brandNotice.setAlignmentX(Component.CENTER_ALIGNMENT);
-        footerBar.add(brandNotice);
+        JLabel footerCaption = generateTextComponent(FOOTER_NOTE_TEXT, Font.PLAIN, 13, TEXT_MUTED_LABEL);
+        footerCaption.setAlignmentX(Component.CENTER_ALIGNMENT);
+        footer.add(footerCaption);
 
-        return footerBar;
+        return footer;
     }
 
-    // --- Control Generator Helpers ---
+    // --- UI Helpers ---
 
-    private JLabel createCustomText(String labelContent, int fontStyle, int fontSize, Color textFx) {
-        JLabel lbl = new JLabel(labelContent);
-        lbl.setFont(new Font(FONT_FAMILY_NAME, fontStyle, fontSize));
-        lbl.setForeground(textFx);
-        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return lbl;
+    private JLabel generateTextComponent(String content, int style, int size, Color color) {
+        JLabel label = new JLabel(content);
+        label.setFont(new Font(APP_FONT_NAME, style, size));
+        label.setForeground(color);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return label;
     }
 
-    private JButton buildColoredButton(String btnText, Color fillTone, int w, int h) {
-        JButton btn = new JButton(btnText);
-        btn.setPreferredSize(new Dimension(w, h));
-        btn.setBackground(fillTone);
-        btn.setForeground(Color.WHITE);
-        btn.setFont(new Font(FONT_FAMILY_NAME, Font.BOLD, 15));
-        btn.setFocusPainted(false);
-        btn.setBorderPainted(false);
-        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    private JButton generateActionButton(String title, Color bgColor, int width, int height) {
+        JButton button = new JButton(title);
+        button.setPreferredSize(new Dimension(width, height));
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font(APP_FONT_NAME, Font.BOLD, 15));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        btn.addMouseListener(new MouseAdapter() {
+        button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                btn.setBackground(fillTone.darker());
+                button.setBackground(bgColor.darker());
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btn.setBackground(fillTone);
+                button.setBackground(bgColor);
             }
         });
 
-        return btn;
+        return button;
     }
 
-    // --- Domain Logic & Event Handlers ---
+    // --- Data & Event Actions ---
 
-    private void loadActiveRentalsData() {
-        activeRentalsDropdown.removeAllItems();
+    private void fetchActiveRentalsList() {
+        rentalSelectorCombo.removeAllItems();
+        List<Rental> allRentals = rentalDataStore.getAllRentals();
+        long openCount = allRentals.stream().filter(Rental::isActive).peek(rentalSelectorCombo::addItem).count();
 
-        int openCount = 0;
-        for (Rental item : rentalDataRepository.getAllRentals()) {
-            if (item.isActive()) {
-                activeRentalsDropdown.addItem(item);
-                openCount++;
-            }
-        }
-
-        totalActiveCountLbl.setText("Active Rentals: " + openCount);
-        refreshRentalSelectionDetails();
+        activeRentalsCountLabel.setText("Active Rentals: " + openCount);
+        updateSelectedRentalSummary();
 
         if (openCount == 0) {
-            updateStatusAlert("No active rentals found.", false);
+            displayStatusMessage("No active rentals found.", false);
         } else {
-            statusNotificationLbl.setText(" ");
+            feedbackNoticeLabel.setText(" ");
         }
     }
 
-    private void attachEventListeners() {
-        confirmReturnBtn.addActionListener(e -> processVehicleReturn());
-        refreshDataBtn.addActionListener(e -> loadActiveRentalsData());
-        navigateHomeBtn.addActionListener(e -> {
+    private void bindViewListeners() {
+        executeReturnButton.addActionListener(e -> performReturnAction());
+        syncDataButton.addActionListener(e -> fetchActiveRentalsList());
+        backNavigationButton.addActionListener(e -> {
             dispose();
             new DashboardFrame();
         });
-        activeRentalsDropdown.addActionListener(e -> refreshRentalSelectionDetails());
+        rentalSelectorCombo.addActionListener(e -> updateSelectedRentalSummary());
     }
 
-    private void refreshRentalSelectionDetails() {
-        Rental chosenRental = (Rental) activeRentalsDropdown.getSelectedItem();
-
-        if (chosenRental == null) {
-            currentRentalDetailsLbl.setText("<html><b>Selected Rental:</b><br>No rental selected yet</html>");
+    private void updateSelectedRentalSummary() {
+        Rental selected = (Rental) rentalSelectorCombo.getSelectedItem();
+        if (selected == null) {
+            selectedSummaryLabel.setText("<html><b>Selected Rental:</b><br>No rental selected yet</html>");
         } else {
-            currentRentalDetailsLbl.setText(String.format(
+            selectedSummaryLabel.setText(String.format(
                     "<html><b>Selected Rental:</b><br>%s %s<br>Days: %d</html>",
-                    chosenRental.getVehicle().getBrand(),
-                    chosenRental.getVehicle().getModel(),
-                    chosenRental.getRentalDays()
+                    selected.getVehicle().getBrand(),
+                    selected.getVehicle().getModel(),
+                    selected.getRentalDays()
             ));
         }
     }
 
-    private void processVehicleReturn() {
-        Rental selectedTarget = (Rental) activeRentalsDropdown.getSelectedItem();
-
-        if (selectedTarget == null) {
-            updateStatusAlert("Please select a rental.", false);
+    private void performReturnAction() {
+        Rental selected = (Rental) rentalSelectorCombo.getSelectedItem();
+        if (selected == null) {
+            displayStatusMessage("Please select a rental.", false);
             return;
         }
 
-        rentalExecutionService.returnVehicle(selectedTarget);
-        updateStatusAlert("Vehicle returned successfully.", true);
-        loadActiveRentalsData();
+        vehicleRentalManager.returnVehicle(selected);
+        displayStatusMessage("Vehicle returned successfully.", true);
+        fetchActiveRentalsList();
     }
 
-    private void updateStatusAlert(String message, boolean isSuccess) {
-        statusNotificationLbl.setForeground(isSuccess ? COLOR_CONFIRM_GREEN : COLOR_ALERT_RED);
-        statusNotificationLbl.setText(message);
+    private void displayStatusMessage(String message, boolean isSuccess) {
+        feedbackNoticeLabel.setForeground(isSuccess ? STATE_SUCCESS_GREEN : STATE_DANGER_RED);
+        feedbackNoticeLabel.setText(message);
     }
 }
