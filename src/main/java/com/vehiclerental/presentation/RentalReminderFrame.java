@@ -18,6 +18,10 @@ import java.awt.event.MouseEvent;
  */
 public class RentalReminderFrame extends JFrame {
 
+    // Constants
+    private static final String FONT_NAME = "Segoe UI";
+    private static final String TITLE_RENTAL_REMINDER = "Rental Reminder";
+
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color NAVY_LIGHT = new Color(35, 92, 132);
     private static final Color PAGE_BG = new Color(244, 248, 252);
@@ -38,7 +42,7 @@ public class RentalReminderFrame extends JFrame {
     private JLabel selectedVehicleLabel;
     private JLabel availableVehiclesLabel;
 
-    private final RentalService rentalService =
+    private final transient RentalService rentalService =
             new RentalService(new EmailNotificationService());
 
     public RentalReminderFrame() {
@@ -60,7 +64,7 @@ public class RentalReminderFrame extends JFrame {
     }
 
     private void initializeFrame() {
-        setTitle("Rental Reminder");
+        setTitle(TITLE_RENTAL_REMINDER);
         setSize(980, 650);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -76,12 +80,12 @@ public class RentalReminderFrame extends JFrame {
         titlePanel.setOpaque(false);
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("Rental Reminder");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        JLabel title = new JLabel(TITLE_RENTAL_REMINDER);
+        title.setFont(new Font(FONT_NAME, Font.BOLD, 32));
         title.setForeground(Color.WHITE);
 
         JLabel subtitle = new JLabel("Send reminder messages for vehicle rentals");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         subtitle.setForeground(new Color(220, 235, 245));
 
         titlePanel.add(title);
@@ -90,46 +94,35 @@ public class RentalReminderFrame extends JFrame {
 
         header.add(titlePanel, BorderLayout.WEST);
 
-        backButton = createButton("Back", RED, 110, 42);
+        backButton = createHeaderButton("Back to Dashboard");
         header.add(backButton, BorderLayout.EAST);
 
         return header;
     }
 
     private JPanel createCenter() {
-        JPanel background = new JPanel(new GridBagLayout());
-        background.setBackground(PAGE_BG);
-        background.setBorder(new EmptyBorder(32, 42, 32, 42));
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2, 24, 0));
+        centerPanel.setBackground(PAGE_BG);
+        centerPanel.setBorder(new EmptyBorder(28, 36, 28, 36));
 
-        RoundedPanel mainCard = new RoundedPanel(28, CARD_BG);
-        mainCard.setLayout(new BorderLayout());
-        mainCard.setBorder(new EmptyBorder(30, 30, 30, 30));
-        mainCard.setPreferredSize(new Dimension(820, 410));
+        centerPanel.add(createSummaryCard());
+        centerPanel.add(createFormCard());
 
-        JPanel content = new JPanel(new GridLayout(1, 2, 28, 0));
-        content.setOpaque(false);
-
-        content.add(createInfoPanel());
-        content.add(createFormPanel());
-
-        mainCard.add(content, BorderLayout.CENTER);
-        background.add(mainCard);
-
-        return background;
+        return centerPanel;
     }
 
-    private JPanel createInfoPanel() {
+    private JPanel createSummaryCard() {
         RoundedPanel panel = new RoundedPanel(24, new Color(236, 245, 252));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(30, 28, 30, 28));
 
         JLabel title = new JLabel("Reminder Summary");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setFont(new Font(FONT_NAME, Font.BOLD, 24));
         title.setForeground(NAVY);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel subtitle = new JLabel("Choose a vehicle and send a reminder message.");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
         subtitle.setForeground(TEXT_GRAY);
         subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -139,7 +132,7 @@ public class RentalReminderFrame extends JFrame {
         panel.add(Box.createVerticalStrut(28));
 
         availableVehiclesLabel = new JLabel("Available Vehicles: 0");
-        availableVehiclesLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        availableVehiclesLabel.setFont(new Font(FONT_NAME, Font.BOLD, 18));
         availableVehiclesLabel.setForeground(GREEN);
         availableVehiclesLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -147,7 +140,7 @@ public class RentalReminderFrame extends JFrame {
         panel.add(Box.createVerticalStrut(26));
 
         selectedVehicleLabel = new JLabel("<html><b>Selected Vehicle:</b><br>No vehicle selected yet</html>");
-        selectedVehicleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        selectedVehicleLabel.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         selectedVehicleLabel.setForeground(TEXT_DARK);
         selectedVehicleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -163,7 +156,7 @@ public class RentalReminderFrame extends JFrame {
         panel.add(Box.createVerticalGlue());
 
         JLabel note = new JLabel("SB Car Rental");
-        note.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        note.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         note.setForeground(NAVY);
         note.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(note);
@@ -173,10 +166,21 @@ public class RentalReminderFrame extends JFrame {
 
     private JLabel createRuleLabel(String text) {
         JLabel label = new JLabel("• " + text);
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        label.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
         label.setForeground(TEXT_DARK);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         return label;
+    }
+
+    private JPanel createFormCard() {
+        RoundedPanel card = new RoundedPanel(24, CARD_BG);
+        card.setLayout(new BorderLayout());
+        card.setBorder(new EmptyBorder(30, 30, 30, 30));
+
+        card.add(createFormPanel(), BorderLayout.CENTER);
+        card.add(createButtonsPanel(), BorderLayout.SOUTH);
+
+        return card;
     }
 
     private JPanel createFormPanel() {
@@ -185,12 +189,12 @@ public class RentalReminderFrame extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JLabel formTitle = new JLabel("Reminder Details");
-        formTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        formTitle.setFont(new Font(FONT_NAME, Font.BOLD, 24));
         formTitle.setForeground(TEXT_DARK);
         formTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel formSubtitle = new JLabel("Select a vehicle and click Send Reminder.");
-        formSubtitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        formSubtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
         formSubtitle.setForeground(TEXT_GRAY);
         formSubtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -205,43 +209,40 @@ public class RentalReminderFrame extends JFrame {
 
         vehicleComboBox = new JComboBox<>();
         vehicleComboBox.setMaximumSize(new Dimension(360, 44));
-        vehicleComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        vehicleComboBox.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         vehicleComboBox.setBackground(Color.WHITE);
         vehicleComboBox.setRenderer(new VehicleRenderer());
         vehicleComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
         panel.add(vehicleComboBox);
 
         panel.add(Box.createVerticalStrut(22));
 
         messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        messageLabel.setFont(new Font(FONT_NAME, Font.BOLD, 14));
         messageLabel.setForeground(RED);
         messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
         panel.add(messageLabel);
 
-        panel.add(Box.createVerticalStrut(18));
+        return panel;
+    }
 
-        JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, 14, 0));
-        buttonsPanel.setOpaque(false);
-        buttonsPanel.setMaximumSize(new Dimension(360, 44));
-        buttonsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+    private JPanel createButtonsPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        panel.setOpaque(false);
+        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        reminderButton = createButton("Send Reminder", GREEN, 160, 44);
-        refreshButton = createButton("Refresh", BLUE, 160, 44);
+        reminderButton = createButton("Send Reminder", BLUE, 170, 44);
+        refreshButton = createButton("Refresh", GREEN, 120, 44);
 
-        buttonsPanel.add(reminderButton);
-        buttonsPanel.add(refreshButton);
-
-        panel.add(buttonsPanel);
+        panel.add(reminderButton);
+        panel.add(refreshButton);
 
         return panel;
     }
 
     private JLabel createInputLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        label.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         label.setForeground(TEXT_DARK);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         return label;
@@ -252,7 +253,7 @@ public class RentalReminderFrame extends JFrame {
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(color);
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -272,13 +273,38 @@ public class RentalReminderFrame extends JFrame {
         return button;
     }
 
+    private JButton createHeaderButton(String text) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(170, 40));
+        button.setBackground(NAVY_LIGHT);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 14));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(NAVY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(NAVY_LIGHT);
+            }
+        });
+
+        return button;
+    }
+
     private JPanel createFooter() {
         JPanel footer = new JPanel();
         footer.setBackground(new Color(248, 249, 250));
         footer.setBorder(new EmptyBorder(12, 0, 12, 0));
 
         JLabel label = new JLabel("SB Car Rental Management System");
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        label.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
         label.setForeground(TEXT_GRAY);
 
         footer.add(label);
@@ -381,7 +407,8 @@ public class RentalReminderFrame extends JFrame {
                 );
             }
 
-            setFont(new Font("Segoe UI", Font.PLAIN, 15));
+            setFont(new Font(FONT_NAME, Font.PLAIN, 15));
+
             return this;
         }
     }

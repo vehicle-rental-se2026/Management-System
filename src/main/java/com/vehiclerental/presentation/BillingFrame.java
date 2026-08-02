@@ -17,6 +17,7 @@ public class BillingFrame extends JFrame {
 
     // Constants
     private static final String FONT_NAME = "Segoe UI";
+    private static final String DEFAULT_AMOUNT = "0.00 ₪";
 
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color NAVY_LIGHT = new Color(35, 92, 132);
@@ -41,8 +42,7 @@ public class BillingFrame extends JFrame {
     private JButton clearButton;
     private JButton backButton;
 
-    private final BillingService billingService =
-            new BillingService();
+    private final transient BillingService billingService = new BillingService();
 
     public BillingFrame() {
         initializeFrame();
@@ -162,6 +162,7 @@ public class BillingFrame extends JFrame {
         messageLabel.setFont(new Font(FONT_NAME, Font.BOLD, 14));
         messageLabel.setForeground(RED);
         messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         panel.add(messageLabel);
 
         panel.add(Box.createVerticalStrut(16));
@@ -185,6 +186,7 @@ public class BillingFrame extends JFrame {
         hint.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
         hint.setForeground(TEXT_GRAY);
         hint.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         panel.add(hint);
 
         return panel;
@@ -210,9 +212,9 @@ public class BillingFrame extends JFrame {
         panel.add(subtitle);
         panel.add(Box.createVerticalStrut(26));
 
-        rentalCostValueLabel = createValueLabel("0.00 ₪", BLUE);
-        penaltyValueLabel = createValueLabel("0.00 ₪", ORANGE);
-        totalValueLabel = createValueLabel("0.00 ₪", GREEN);
+        rentalCostValueLabel = createValueLabel(DEFAULT_AMOUNT, BLUE);
+        penaltyValueLabel = createValueLabel(DEFAULT_AMOUNT, ORANGE);
+        totalValueLabel = createValueLabel(DEFAULT_AMOUNT, GREEN);
 
         panel.add(createResultCard("Rental Cost", rentalCostValueLabel));
         panel.add(Box.createVerticalStrut(14));
@@ -246,6 +248,7 @@ public class BillingFrame extends JFrame {
         JLabel label = new JLabel(text);
         label.setFont(new Font(FONT_NAME, Font.BOLD, 20));
         label.setForeground(color);
+
         return label;
     }
 
@@ -254,6 +257,7 @@ public class BillingFrame extends JFrame {
         label.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         label.setForeground(TEXT_DARK);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         return label;
     }
 
@@ -268,6 +272,7 @@ public class BillingFrame extends JFrame {
                 new EmptyBorder(8, 12, 8, 12)
         ));
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         return field;
     }
 
@@ -311,7 +316,6 @@ public class BillingFrame extends JFrame {
 
     private void initializeEvents() {
         calculateButton.addActionListener(e -> calculateBill());
-
         clearButton.addActionListener(e -> clearFields());
 
         backButton.addActionListener(e -> {
@@ -365,9 +369,9 @@ public class BillingFrame extends JFrame {
         rentalDaysField.setText("");
         lateDaysField.setText("");
 
-        rentalCostValueLabel.setText("0.00 ₪");
-        penaltyValueLabel.setText("0.00 ₪");
-        totalValueLabel.setText("0.00 ₪");
+        rentalCostValueLabel.setText(DEFAULT_AMOUNT);
+        penaltyValueLabel.setText(DEFAULT_AMOUNT);
+        totalValueLabel.setText(DEFAULT_AMOUNT);
 
         messageLabel.setText(" ");
         messageLabel.setForeground(RED);

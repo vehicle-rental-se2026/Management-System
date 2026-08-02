@@ -16,7 +16,10 @@ public class VehicleSteps {
     private List<Vehicle> vehicles;
 
     @Given("the vehicle list exists")
-    public void theVehicleListExists() {
+    public void theVehicleListExists()
+    {
+        // No setup required because VehicleService initializes the repository.
+
     }
 
     @When("the manager views available vehicles")

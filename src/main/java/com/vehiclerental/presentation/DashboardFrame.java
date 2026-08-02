@@ -8,12 +8,16 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 /**
  * The DashboardFrame class provides the main user
  * interface for accessing the vehicle rental
  * management system features.
  */
 public class DashboardFrame extends JFrame {
+
+    // Constants
+    private static final String FONT_NAME = "Segoe UI";
 
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color NAVY_LIGHT = new Color(35, 92, 132);
@@ -23,7 +27,7 @@ public class DashboardFrame extends JFrame {
     private static final Color TEXT_GRAY = new Color(108, 117, 125);
     private static final Color RED = new Color(214, 80, 80);
 
-    private final VehicleService vehicleService =
+    private final transient VehicleService vehicleService =
             new VehicleService(new VehicleRepository());
 
     private JButton vehiclesButton;
@@ -74,11 +78,11 @@ public class DashboardFrame extends JFrame {
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
 
         JLabel title = new JLabel("SB CAR RENTAL");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 34));
+        title.setFont(new Font(FONT_NAME, Font.BOLD, 34));
         title.setForeground(Color.WHITE);
 
         JLabel subtitle = new JLabel("Vehicle Rental Management System");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         subtitle.setForeground(new Color(220, 235, 245));
 
         titlePanel.add(title);
@@ -91,7 +95,7 @@ public class DashboardFrame extends JFrame {
         rightPanel.setOpaque(false);
 
         JLabel admin = new JLabel("Administrator");
-        admin.setFont(new Font("Segoe UI", Font.BOLD, 17));
+        admin.setFont(new Font(FONT_NAME, Font.BOLD, 17));
         admin.setForeground(Color.WHITE);
 
         logoutButton = createHeaderButton("Logout");
@@ -114,12 +118,12 @@ public class DashboardFrame extends JFrame {
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
         JLabel welcome = new JLabel("Welcome to SB Car Rental Dashboard");
-        welcome.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        welcome.setFont(new Font(FONT_NAME, Font.BOLD, 30));
         welcome.setForeground(TEXT_DARK);
         welcome.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel description = new JLabel("Manage vehicles, rentals, billing, reminders, and vehicle types.");
-        description.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        description.setFont(new Font(FONT_NAME, Font.PLAIN, 16));
         description.setForeground(TEXT_GRAY);
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -206,11 +210,11 @@ public class DashboardFrame extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        titleLabel.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         titleLabel.setForeground(TEXT_GRAY);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        valueLabel.setFont(new Font(FONT_NAME, Font.BOLD, 28));
         valueLabel.setForeground(color);
         valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -229,7 +233,7 @@ public class DashboardFrame extends JFrame {
         footerPanel.setBorder(new EmptyBorder(12, 0, 12, 0));
 
         JLabel footer = new JLabel("© 2026 SB Car Rental - Vehicle Rental Management System");
-        footer.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        footer.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
         footer.setForeground(TEXT_GRAY);
 
         footerPanel.add(footer);
@@ -238,7 +242,6 @@ public class DashboardFrame extends JFrame {
 
     private JButton createCard(String title, String description, Color accentColor) {
         CardButton button = new CardButton(accentColor);
-
         button.setText(
                 "<html><center>"
                         + "<span style='font-size:20px;'><b>" + title + "</b></span>"
@@ -247,7 +250,7 @@ public class DashboardFrame extends JFrame {
                         + "</center></html>"
         );
 
-        button.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        button.setFont(new Font(FONT_NAME, Font.PLAIN, 16));
         button.setForeground(TEXT_DARK);
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -261,7 +264,7 @@ public class DashboardFrame extends JFrame {
         button.setPreferredSize(new Dimension(115, 42));
         button.setBackground(RED);
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -283,7 +286,6 @@ public class DashboardFrame extends JFrame {
 
     private void refreshDashboard() {
         int availableVehicles = vehicleService.getAvailableVehicles().size();
-
         availableVehiclesLabel.setText(String.valueOf(availableVehicles));
         rentedVehiclesLabel.setText("--");
         statusLabel.setText("Online");

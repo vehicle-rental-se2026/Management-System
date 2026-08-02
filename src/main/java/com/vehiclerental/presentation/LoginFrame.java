@@ -9,11 +9,15 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+
 /**
  * The LoginFrame class provides the user interface
  * for manager authentication and system login.
  */
 public class LoginFrame extends JFrame {
+
+    // Constants
+    private static final String FONT_NAME = "Segoe UI";
 
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color PAGE_BG = new Color(226, 239, 248);
@@ -27,11 +31,10 @@ public class LoginFrame extends JFrame {
     private JPasswordField passwordField;
     private JCheckBox showPasswordCheckBox;
     private JLabel messageLabel;
-
     private JButton loginButton;
     private JButton exitButton;
 
-    private final LoginService loginService =
+    private final transient LoginService loginService =
             new LoginService(new ManagerRepository());
 
     public LoginFrame() {
@@ -39,7 +42,6 @@ public class LoginFrame extends JFrame {
 
         JPanel mainPanel = new GradientBackgroundPanel();
         mainPanel.setLayout(new GridBagLayout());
-
         mainPanel.add(createLoginCard());
 
         add(mainPanel);
@@ -98,31 +100,31 @@ public class LoginFrame extends JFrame {
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel title = new JLabel("SB CAR RENTAL");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        title.setFont(new Font(FONT_NAME, Font.BOLD, 30));
         title.setForeground(NAVY);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel subtitle = new JLabel("Vehicle Rental Management System");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         subtitle.setForeground(TEXT_GRAY);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel welcome = new JLabel("Welcome Back");
-        welcome.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        welcome.setFont(new Font(FONT_NAME, Font.BOLD, 22));
         welcome.setForeground(TEXT_DARK);
         welcome.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel loginText = new JLabel("Login to continue to your dashboard");
-        loginText.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        loginText.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
         loginText.setForeground(TEXT_GRAY);
         loginText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panel.add(title);
         panel.add(Box.createVerticalStrut(5));
         panel.add(subtitle);
-        panel.add(Box.createVerticalStrut(18));
+        panel.add(Box.createVerticalStrut(12));
         panel.add(welcome);
-        panel.add(Box.createVerticalStrut(5));
+        panel.add(Box.createVerticalStrut(4));
         panel.add(loginText);
 
         return panel;
@@ -132,8 +134,8 @@ public class LoginFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setMaximumSize(new Dimension(360, 190));
-        panel.setPreferredSize(new Dimension(360, 190));
+        panel.setMaximumSize(new Dimension(430, 210));
+        panel.setPreferredSize(new Dimension(430, 210));
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel usernameLabel = createInputLabel("Username");
@@ -144,20 +146,20 @@ public class LoginFrame extends JFrame {
 
         showPasswordCheckBox = new JCheckBox("Show Password");
         showPasswordCheckBox.setOpaque(false);
-        showPasswordCheckBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        showPasswordCheckBox.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
         showPasswordCheckBox.setForeground(TEXT_DARK);
         showPasswordCheckBox.setFocusPainted(false);
         showPasswordCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        messageLabel.setFont(new Font(FONT_NAME, Font.BOLD, 13));
         messageLabel.setForeground(RED);
         messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(usernameLabel);
         panel.add(Box.createVerticalStrut(6));
         panel.add(usernameField);
-        panel.add(Box.createVerticalStrut(13));
+        panel.add(Box.createVerticalStrut(12));
         panel.add(passwordLabel);
         panel.add(Box.createVerticalStrut(6));
         panel.add(passwordField);
@@ -170,14 +172,14 @@ public class LoginFrame extends JFrame {
     }
 
     private JPanel createButtonsPanel() {
-        JPanel panel = new JPanel(new GridLayout(1, 2, 18, 0));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         panel.setOpaque(false);
-        panel.setMaximumSize(new Dimension(360, 46));
-        panel.setPreferredSize(new Dimension(360, 46));
+        panel.setMaximumSize(new Dimension(430, 50));
+        panel.setPreferredSize(new Dimension(430, 50));
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        loginButton = createButton("LOGIN", BLUE);
-        exitButton = createButton("EXIT", RED);
+        loginButton = createButton("Login", BLUE);
+        exitButton = createButton("Exit", RED);
 
         panel.add(loginButton);
         panel.add(exitButton);
@@ -187,7 +189,7 @@ public class LoginFrame extends JFrame {
 
     private JLabel createFooterLabel() {
         JLabel footer = new JLabel("© 2026 SB Car Rental");
-        footer.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        footer.setFont(new Font(FONT_NAME, Font.PLAIN, 12));
         footer.setForeground(TEXT_GRAY);
         footer.setAlignmentX(Component.CENTER_ALIGNMENT);
         return footer;
@@ -195,7 +197,7 @@ public class LoginFrame extends JFrame {
 
     private JLabel createInputLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        label.setFont(new Font(FONT_NAME, Font.BOLD, 14));
         label.setForeground(TEXT_DARK);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         return label;
@@ -205,7 +207,7 @@ public class LoginFrame extends JFrame {
         JTextField field = new JTextField();
         field.setPreferredSize(new Dimension(360, 40));
         field.setMaximumSize(new Dimension(360, 40));
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        field.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         field.setForeground(TEXT_DARK);
         field.setCaretColor(BLUE);
         field.setBorder(BorderFactory.createCompoundBorder(
@@ -220,7 +222,7 @@ public class LoginFrame extends JFrame {
         JPasswordField field = new JPasswordField();
         field.setPreferredSize(new Dimension(360, 40));
         field.setMaximumSize(new Dimension(360, 40));
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        field.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         field.setForeground(TEXT_DARK);
         field.setCaretColor(BLUE);
         field.setEchoChar('•');
@@ -237,7 +239,7 @@ public class LoginFrame extends JFrame {
         button.setPreferredSize(new Dimension(170, 46));
         button.setBackground(color);
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
