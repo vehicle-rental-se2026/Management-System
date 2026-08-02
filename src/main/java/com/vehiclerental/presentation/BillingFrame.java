@@ -10,12 +10,11 @@ import java.awt.event.MouseEvent;
 
 /**
  * The BillingFrame class provides the user interface
- * for calculating rental costs, late penalties,
- * and total payment.
+ * for calculating rental costs, late penalties, and total payment.
  */
 public class BillingFrame extends JFrame {
 
-    // Constants
+    // Style Constants
     private static final String FONT_NAME = "Segoe UI";
     private static final String DEFAULT_AMOUNT = "0.00 ₪";
 
@@ -30,6 +29,7 @@ public class BillingFrame extends JFrame {
     private static final Color ORANGE = new Color(210, 145, 80);
     private static final Color RED = new Color(214, 80, 80);
 
+    // Form Components
     private JTextField rentalDaysField;
     private JTextField lateDaysField;
 
@@ -57,7 +57,6 @@ public class BillingFrame extends JFrame {
         add(mainPanel);
 
         initializeEvents();
-
         setVisible(true);
     }
 
@@ -74,17 +73,10 @@ public class BillingFrame extends JFrame {
         header.setLayout(new BorderLayout());
         header.setBorder(new EmptyBorder(24, 36, 24, 36));
 
-        JPanel titlePanel = new JPanel();
-        titlePanel.setOpaque(false);
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        JPanel titlePanel = createYBoxPanel();
 
-        JLabel title = new JLabel("Billing");
-        title.setFont(new Font(FONT_NAME, Font.BOLD, 32));
-        title.setForeground(Color.WHITE);
-
-        JLabel subtitle = new JLabel("Calculate rental cost, late penalty, and total amount");
-        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        subtitle.setForeground(new Color(220, 235, 245));
+        JLabel title = createStandardLabel("Billing", Font.BOLD, 32, Color.WHITE);
+        JLabel subtitle = createStandardLabel("Calculate rental cost, late penalty, and total amount", Font.PLAIN, 15, new Color(220, 235, 245));
 
         titlePanel.add(title);
         titlePanel.add(Box.createVerticalStrut(5));
@@ -125,44 +117,26 @@ public class BillingFrame extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(30, 28, 30, 28));
 
-        JLabel title = new JLabel("Billing Details");
-        title.setFont(new Font(FONT_NAME, Font.BOLD, 24));
-        title.setForeground(NAVY);
-        title.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel subtitle = new JLabel("Enter rental days and late days.");
-        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
-        subtitle.setForeground(TEXT_GRAY);
-        subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        panel.add(title);
+        panel.add(createStandardLabel("Billing Details", Font.BOLD, 24, NAVY));
         panel.add(Box.createVerticalStrut(8));
-        panel.add(subtitle);
+        panel.add(createStandardLabel("Enter rental days and late days.", Font.PLAIN, 14, TEXT_GRAY));
         panel.add(Box.createVerticalStrut(28));
 
-        JLabel rentalDaysLabel = createInputLabel("Rental Days");
-        panel.add(rentalDaysLabel);
+        panel.add(createInputLabel("Rental Days"));
         panel.add(Box.createVerticalStrut(8));
-
         rentalDaysField = createTextField();
         panel.add(rentalDaysField);
 
         panel.add(Box.createVerticalStrut(20));
 
-        JLabel lateDaysLabel = createInputLabel("Late Days");
-        panel.add(lateDaysLabel);
+        panel.add(createInputLabel("Late Days"));
         panel.add(Box.createVerticalStrut(8));
-
         lateDaysField = createTextField();
         panel.add(lateDaysField);
 
         panel.add(Box.createVerticalStrut(18));
 
-        messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font(FONT_NAME, Font.BOLD, 14));
-        messageLabel.setForeground(RED);
-        messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        messageLabel = createStandardLabel(" ", Font.BOLD, 14, RED);
         panel.add(messageLabel);
 
         panel.add(Box.createVerticalStrut(16));
@@ -179,37 +153,20 @@ public class BillingFrame extends JFrame {
         buttonsPanel.add(clearButton);
 
         panel.add(buttonsPanel);
-
         panel.add(Box.createVerticalGlue());
 
-        JLabel hint = new JLabel("<html>Example: Rental Days = 5, Late Days = 2</html>");
-        hint.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
-        hint.setForeground(TEXT_GRAY);
-        hint.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        JLabel hint = createStandardLabel("<html>Example: Rental Days = 5, Late Days = 2</html>", Font.PLAIN, 13, TEXT_GRAY);
         panel.add(hint);
 
         return panel;
     }
 
     private JPanel createResultPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JPanel panel = createYBoxPanel();
 
-        JLabel title = new JLabel("Payment Summary");
-        title.setFont(new Font(FONT_NAME, Font.BOLD, 24));
-        title.setForeground(TEXT_DARK);
-        title.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel subtitle = new JLabel("Calculated values will appear below.");
-        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
-        subtitle.setForeground(TEXT_GRAY);
-        subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        panel.add(title);
+        panel.add(createStandardLabel("Payment Summary", Font.BOLD, 24, TEXT_DARK));
         panel.add(Box.createVerticalStrut(8));
-        panel.add(subtitle);
+        panel.add(createStandardLabel("Calculated values will appear below.", Font.PLAIN, 14, TEXT_GRAY));
         panel.add(Box.createVerticalStrut(26));
 
         rentalCostValueLabel = createValueLabel(DEFAULT_AMOUNT, BLUE);
@@ -234,9 +191,7 @@ public class BillingFrame extends JFrame {
         card.setMaximumSize(new Dimension(360, 80));
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font(FONT_NAME, Font.BOLD, 15));
-        titleLabel.setForeground(TEXT_GRAY);
+        JLabel titleLabel = createStandardLabel(title, Font.BOLD, 15, TEXT_GRAY);
 
         card.add(titleLabel, BorderLayout.WEST);
         card.add(valueLabel, BorderLayout.EAST);
@@ -244,21 +199,29 @@ public class BillingFrame extends JFrame {
         return card;
     }
 
-    private JLabel createValueLabel(String text, Color color) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font(FONT_NAME, Font.BOLD, 20));
-        label.setForeground(color);
+    // --- Helper Methods to Eliminate Code Duplication ---
 
+    private JPanel createYBoxPanel() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        return panel;
+    }
+
+    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
+        label.setForeground(color);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
         return label;
     }
 
     private JLabel createInputLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font(FONT_NAME, Font.BOLD, 15));
-        label.setForeground(TEXT_DARK);
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return createStandardLabel(text, Font.BOLD, 15, TEXT_DARK);
+    }
 
-        return label;
+    private JLabel createValueLabel(String text, Color color) {
+        return createStandardLabel(text, Font.BOLD, 20, color);
     }
 
     private JTextField createTextField() {
@@ -306,10 +269,7 @@ public class BillingFrame extends JFrame {
         footer.setBackground(new Color(248, 249, 250));
         footer.setBorder(new EmptyBorder(12, 0, 12, 0));
 
-        JLabel label = new JLabel("SB Car Rental Management System");
-        label.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
-        label.setForeground(TEXT_GRAY);
-
+        JLabel label = createStandardLabel("SB Car Rental Management System", Font.PLAIN, 13, TEXT_GRAY);
         footer.add(label);
         return footer;
     }
@@ -333,32 +293,29 @@ public class BillingFrame extends JFrame {
             return;
         }
 
-        int rentalDays;
-        int lateDays;
-
         try {
-            rentalDays = Integer.parseInt(rentalDaysText);
-            lateDays = Integer.parseInt(lateDaysText);
+            int rentalDays = Integer.parseInt(rentalDaysText);
+            int lateDays = Integer.parseInt(lateDaysText);
+
+            if (rentalDays < 0 || lateDays < 0) {
+                showMessage("Days cannot be negative.");
+                return;
+            }
+
+            double rentalCost = billingService.calculateRentalCost(rentalDays);
+            double penalty = billingService.calculateLatePenalty(lateDays);
+            double total = billingService.calculateTotal(rentalDays, lateDays);
+
+            rentalCostValueLabel.setText(formatMoney(rentalCost));
+            penaltyValueLabel.setText(formatMoney(penalty));
+            totalValueLabel.setText(formatMoney(total));
+
+            messageLabel.setForeground(GREEN);
+            messageLabel.setText("Bill calculated successfully.");
+
         } catch (NumberFormatException ex) {
             showMessage("Please enter valid numbers.");
-            return;
         }
-
-        if (rentalDays < 0 || lateDays < 0) {
-            showMessage("Days cannot be negative.");
-            return;
-        }
-
-        double rentalCost = billingService.calculateRentalCost(rentalDays);
-        double penalty = billingService.calculateLatePenalty(lateDays);
-        double total = billingService.calculateTotal(rentalDays, lateDays);
-
-        rentalCostValueLabel.setText(formatMoney(rentalCost));
-        penaltyValueLabel.setText(formatMoney(penalty));
-        totalValueLabel.setText(formatMoney(total));
-
-        messageLabel.setForeground(GREEN);
-        messageLabel.setText("Bill calculated successfully.");
     }
 
     private String formatMoney(double value) {
@@ -382,8 +339,9 @@ public class BillingFrame extends JFrame {
         messageLabel.setText(message);
     }
 
-    private static class RoundedPanel extends JPanel {
+    // --- Custom UI Panels ---
 
+    private static class RoundedPanel extends JPanel {
         private final int radius;
         private final Color backgroundColor;
 
@@ -397,10 +355,7 @@ public class BillingFrame extends JFrame {
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
 
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             g2.setColor(new Color(0, 0, 0, 14));
             g2.fillRoundRect(6, 6, getWidth() - 12, getHeight() - 12, radius, radius);
@@ -409,13 +364,11 @@ public class BillingFrame extends JFrame {
             g2.fillRoundRect(0, 0, getWidth() - 12, getHeight() - 12, radius, radius);
 
             g2.dispose();
-
             super.paintComponent(g);
         }
     }
 
     private static class GradientPanel extends JPanel {
-
         private final Color startColor;
         private final Color endColor;
 
@@ -429,11 +382,7 @@ public class BillingFrame extends JFrame {
             super.paintComponent(g);
 
             Graphics2D g2 = (Graphics2D) g;
-
-            GradientPaint gradient = new GradientPaint(
-                    0, 0, startColor,
-                    getWidth(), getHeight(), endColor
-            );
+            GradientPaint gradient = new GradientPaint(0, 0, startColor, getWidth(), getHeight(), endColor);
 
             g2.setPaint(gradient);
             g2.fillRect(0, 0, getWidth(), getHeight());

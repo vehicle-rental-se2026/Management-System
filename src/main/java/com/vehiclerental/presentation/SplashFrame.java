@@ -3,11 +3,21 @@ package com.vehiclerental.presentation;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+
 /**
  * The SplashFrame class displays the splash screen
  * when the application starts.
  */
 public class SplashFrame extends JFrame {
+
+    private static final String FONT_NAME = "Segoe UI";
+    private static final String TITLE_APP = "SB Car Rental";
+    private static final String LOGO_PATH = "/images/logo.png";
+    private static final int TIMER_DELAY_MS = 35;
+
+    private static final Color PROGRESS_BAR_FG = new Color(92, 155, 214);
+    private static final Color PROGRESS_BAR_BG = new Color(230, 235, 240);
+    private static final Color OVERLAY_COLOR = new Color(8, 28, 48, 55);
 
     private JProgressBar progressBar;
     private JLabel loadingLabel;
@@ -15,14 +25,10 @@ public class SplashFrame extends JFrame {
     private int progress = 0;
 
     public SplashFrame() {
-
         initializeFrame();
 
-        BackgroundImagePanel mainPanel =
-                new BackgroundImagePanel("/images/logo.png");
-
+        BackgroundImagePanel mainPanel = new BackgroundImagePanel(LOGO_PATH);
         mainPanel.setLayout(new BorderLayout());
-
         mainPanel.add(createBottomPanel(), BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -33,7 +39,7 @@ public class SplashFrame extends JFrame {
     }
 
     private void initializeFrame() {
-        setTitle("SB Car Rental");
+        setTitle(TITLE_APP);
         setSize(1100, 760);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -41,25 +47,13 @@ public class SplashFrame extends JFrame {
     }
 
     private JPanel createBottomPanel() {
-
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         bottomPanel.setBorder(new EmptyBorder(0, 120, 35, 120));
 
-        progressBar = new JProgressBar(0, 100);
-        progressBar.setValue(0);
-        progressBar.setStringPainted(false);
-        progressBar.setPreferredSize(new Dimension(0, 16));
-        progressBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 16));
-        progressBar.setForeground(new Color(92, 155, 214));
-        progressBar.setBackground(new Color(230, 235, 240));
-        progressBar.setBorder(BorderFactory.createEmptyBorder());
-
-        loadingLabel = new JLabel("Loading... 0%");
-        loadingLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        loadingLabel.setForeground(Color.WHITE);
-        loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        progressBar = createProgressBar();
+        loadingLabel = createStandardLabel("Loading... 0%", Font.PLAIN, 18, Color.WHITE, Component.CENTER_ALIGNMENT);
 
         bottomPanel.add(progressBar);
         bottomPanel.add(Box.createVerticalStrut(18));
@@ -68,10 +62,32 @@ public class SplashFrame extends JFrame {
         return bottomPanel;
     }
 
+    // --- Helper UI Methods ---
+
+    private JProgressBar createProgressBar() {
+        JProgressBar bar = new JProgressBar(0, 100);
+        bar.setValue(0);
+        bar.setStringPainted(false);
+        bar.setPreferredSize(new Dimension(0, 16));
+        bar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 16));
+        bar.setForeground(PROGRESS_BAR_FG);
+        bar.setBackground(PROGRESS_BAR_BG);
+        bar.setBorder(BorderFactory.createEmptyBorder());
+        return bar;
+    }
+
+    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color, float alignmentX) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
+        label.setForeground(color);
+        label.setAlignmentX(alignmentX);
+        return label;
+    }
+
+    // --- Logic & Timers ---
+
     private void startLoading() {
-
-        timer = new Timer(35, e -> {
-
+        timer = new Timer(TIMER_DELAY_MS, e -> {
             progress++;
             progressBar.setValue(progress);
             loadingLabel.setText("Loading... " + progress + "%");
@@ -81,11 +97,12 @@ public class SplashFrame extends JFrame {
                 dispose();
                 new LoginFrame();
             }
-
         });
 
         timer.start();
     }
+
+    // --- Custom UI Component ---
 
     private static class BackgroundImagePanel extends JPanel {
 
@@ -116,7 +133,7 @@ public class SplashFrame extends JFrame {
 
             g2.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-            g2.setColor(new Color(8, 28, 48, 55));
+            g2.setColor(OVERLAY_COLOR);
             g2.fillRect(0, 0, getWidth(), getHeight());
 
             g2.dispose();

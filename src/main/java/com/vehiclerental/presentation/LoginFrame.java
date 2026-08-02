@@ -92,32 +92,12 @@ public class LoginFrame extends JFrame {
     }
 
     private JPanel createTitlePanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setMaximumSize(new Dimension(430, 115));
-        panel.setPreferredSize(new Dimension(430, 115));
-        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel panel = createYBoxPanel(430, 115);
 
-        JLabel title = new JLabel("SB CAR RENTAL");
-        title.setFont(new Font(FONT_NAME, Font.BOLD, 30));
-        title.setForeground(NAVY);
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel subtitle = new JLabel("Vehicle Rental Management System");
-        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        subtitle.setForeground(TEXT_GRAY);
-        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel welcome = new JLabel("Welcome Back");
-        welcome.setFont(new Font(FONT_NAME, Font.BOLD, 22));
-        welcome.setForeground(TEXT_DARK);
-        welcome.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel loginText = new JLabel("Login to continue to your dashboard");
-        loginText.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
-        loginText.setForeground(TEXT_GRAY);
-        loginText.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel title = createStandardLabel("SB CAR RENTAL", Font.BOLD, 30, NAVY, Component.CENTER_ALIGNMENT);
+        JLabel subtitle = createStandardLabel("Vehicle Rental Management System", Font.PLAIN, 15, TEXT_GRAY, Component.CENTER_ALIGNMENT);
+        JLabel welcome = createStandardLabel("Welcome Back", Font.BOLD, 22, TEXT_DARK, Component.CENTER_ALIGNMENT);
+        JLabel loginText = createStandardLabel("Login to continue to your dashboard", Font.PLAIN, 13, TEXT_GRAY, Component.CENTER_ALIGNMENT);
 
         panel.add(title);
         panel.add(Box.createVerticalStrut(5));
@@ -131,12 +111,7 @@ public class LoginFrame extends JFrame {
     }
 
     private JPanel createFormPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setMaximumSize(new Dimension(430, 210));
-        panel.setPreferredSize(new Dimension(430, 210));
-        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel panel = createYBoxPanel(430, 210);
 
         JLabel usernameLabel = createInputLabel("Username");
         usernameField = createTextField();
@@ -151,10 +126,7 @@ public class LoginFrame extends JFrame {
         showPasswordCheckBox.setFocusPainted(false);
         showPasswordCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font(FONT_NAME, Font.BOLD, 13));
-        messageLabel.setForeground(RED);
-        messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        messageLabel = createStandardLabel(" ", Font.BOLD, 13, RED, Component.LEFT_ALIGNMENT);
 
         panel.add(usernameLabel);
         panel.add(Box.createVerticalStrut(6));
@@ -188,50 +160,57 @@ public class LoginFrame extends JFrame {
     }
 
     private JLabel createFooterLabel() {
-        JLabel footer = new JLabel("© 2026 SB Car Rental");
-        footer.setFont(new Font(FONT_NAME, Font.PLAIN, 12));
-        footer.setForeground(TEXT_GRAY);
-        footer.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return footer;
+        return createStandardLabel("© 2026 SB Car Rental", Font.PLAIN, 12, TEXT_GRAY, Component.CENTER_ALIGNMENT);
+    }
+
+    // --- Helper Methods to Eliminate Code Duplication ---
+
+    private JPanel createYBoxPanel(int width, int height) {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setMaximumSize(new Dimension(width, height));
+        panel.setPreferredSize(new Dimension(width, height));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return panel;
+    }
+
+    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color, float alignmentX) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
+        label.setForeground(color);
+        label.setAlignmentX(alignmentX);
+        return label;
     }
 
     private JLabel createInputLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font(FONT_NAME, Font.BOLD, 14));
-        label.setForeground(TEXT_DARK);
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return label;
+        return createStandardLabel(text, Font.BOLD, 14, TEXT_DARK, Component.LEFT_ALIGNMENT);
     }
 
     private JTextField createTextField() {
         JTextField field = new JTextField();
-        field.setPreferredSize(new Dimension(360, 40));
-        field.setMaximumSize(new Dimension(360, 40));
-        field.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        field.setForeground(TEXT_DARK);
-        field.setCaretColor(BLUE);
-        field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(190, 210, 225), 1),
-                new EmptyBorder(8, 12, 8, 12)
-        ));
-        field.setAlignmentX(Component.LEFT_ALIGNMENT);
+        setupInputField(field);
         return field;
     }
 
     private JPasswordField createPasswordField() {
         JPasswordField field = new JPasswordField();
+        setupInputField(field);
+        field.setEchoChar('•');
+        return field;
+    }
+
+    private void setupInputField(JTextField field) {
         field.setPreferredSize(new Dimension(360, 40));
         field.setMaximumSize(new Dimension(360, 40));
         field.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         field.setForeground(TEXT_DARK);
         field.setCaretColor(BLUE);
-        field.setEchoChar('•');
         field.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(190, 210, 225), 1),
                 new EmptyBorder(8, 12, 8, 12)
         ));
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return field;
     }
 
     private JButton createButton(String text, Color color) {
@@ -278,7 +257,6 @@ public class LoginFrame extends JFrame {
 
     private void initializeEvents() {
         loginButton.addActionListener(e -> login());
-
         exitButton.addActionListener(e -> System.exit(0));
 
         showPasswordCheckBox.addActionListener(e -> {
@@ -313,6 +291,8 @@ public class LoginFrame extends JFrame {
         messageLabel.setForeground(RED);
         messageLabel.setText(message);
     }
+
+    // --- Custom UI Panels ---
 
     private static class GradientBackgroundPanel extends JPanel {
 

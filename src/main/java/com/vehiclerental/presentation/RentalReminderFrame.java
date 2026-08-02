@@ -76,17 +76,10 @@ public class RentalReminderFrame extends JFrame {
         header.setLayout(new BorderLayout());
         header.setBorder(new EmptyBorder(24, 36, 24, 36));
 
-        JPanel titlePanel = new JPanel();
-        titlePanel.setOpaque(false);
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        JPanel titlePanel = createYBoxPanel();
 
-        JLabel title = new JLabel(TITLE_RENTAL_REMINDER);
-        title.setFont(new Font(FONT_NAME, Font.BOLD, 32));
-        title.setForeground(Color.WHITE);
-
-        JLabel subtitle = new JLabel("Send reminder messages for vehicle rentals");
-        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        subtitle.setForeground(new Color(220, 235, 245));
+        JLabel title = createStandardLabel(TITLE_RENTAL_REMINDER, Font.BOLD, 32, Color.WHITE, Component.LEFT_ALIGNMENT);
+        JLabel subtitle = createStandardLabel("Send reminder messages for vehicle rentals", Font.PLAIN, 15, new Color(220, 235, 245), Component.LEFT_ALIGNMENT);
 
         titlePanel.add(title);
         titlePanel.add(Box.createVerticalStrut(5));
@@ -116,34 +109,19 @@ public class RentalReminderFrame extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(30, 28, 30, 28));
 
-        JLabel title = new JLabel("Reminder Summary");
-        title.setFont(new Font(FONT_NAME, Font.BOLD, 24));
-        title.setForeground(NAVY);
-        title.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel subtitle = new JLabel("Choose a vehicle and send a reminder message.");
-        subtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
-        subtitle.setForeground(TEXT_GRAY);
-        subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel title = createStandardLabel("Reminder Summary", Font.BOLD, 24, NAVY, Component.LEFT_ALIGNMENT);
+        JLabel subtitle = createStandardLabel("Choose a vehicle and send a reminder message.", Font.PLAIN, 14, TEXT_GRAY, Component.LEFT_ALIGNMENT);
 
         panel.add(title);
         panel.add(Box.createVerticalStrut(8));
         panel.add(subtitle);
         panel.add(Box.createVerticalStrut(28));
 
-        availableVehiclesLabel = new JLabel("Available Vehicles: 0");
-        availableVehiclesLabel.setFont(new Font(FONT_NAME, Font.BOLD, 18));
-        availableVehiclesLabel.setForeground(GREEN);
-        availableVehiclesLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        availableVehiclesLabel = createStandardLabel("Available Vehicles: 0", Font.BOLD, 18, GREEN, Component.LEFT_ALIGNMENT);
         panel.add(availableVehiclesLabel);
         panel.add(Box.createVerticalStrut(26));
 
-        selectedVehicleLabel = new JLabel("<html><b>Selected Vehicle:</b><br>No vehicle selected yet</html>");
-        selectedVehicleLabel.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
-        selectedVehicleLabel.setForeground(TEXT_DARK);
-        selectedVehicleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        selectedVehicleLabel = createStandardLabel("<html><b>Selected Vehicle:</b><br>No vehicle selected yet</html>", Font.PLAIN, 15, TEXT_DARK, Component.LEFT_ALIGNMENT);
         panel.add(selectedVehicleLabel);
         panel.add(Box.createVerticalStrut(28));
 
@@ -155,21 +133,10 @@ public class RentalReminderFrame extends JFrame {
 
         panel.add(Box.createVerticalGlue());
 
-        JLabel note = new JLabel("SB Car Rental");
-        note.setFont(new Font(FONT_NAME, Font.BOLD, 15));
-        note.setForeground(NAVY);
-        note.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel note = createStandardLabel("SB Car Rental", Font.BOLD, 15, NAVY, Component.LEFT_ALIGNMENT);
         panel.add(note);
 
         return panel;
-    }
-
-    private JLabel createRuleLabel(String text) {
-        JLabel label = new JLabel("• " + text);
-        label.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
-        label.setForeground(TEXT_DARK);
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return label;
     }
 
     private JPanel createFormCard() {
@@ -184,19 +151,10 @@ public class RentalReminderFrame extends JFrame {
     }
 
     private JPanel createFormPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JPanel panel = createYBoxPanel();
 
-        JLabel formTitle = new JLabel("Reminder Details");
-        formTitle.setFont(new Font(FONT_NAME, Font.BOLD, 24));
-        formTitle.setForeground(TEXT_DARK);
-        formTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel formSubtitle = new JLabel("Select a vehicle and click Send Reminder.");
-        formSubtitle.setFont(new Font(FONT_NAME, Font.PLAIN, 14));
-        formSubtitle.setForeground(TEXT_GRAY);
-        formSubtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel formTitle = createStandardLabel("Reminder Details", Font.BOLD, 24, TEXT_DARK, Component.LEFT_ALIGNMENT);
+        JLabel formSubtitle = createStandardLabel("Select a vehicle and click Send Reminder.", Font.PLAIN, 14, TEXT_GRAY, Component.LEFT_ALIGNMENT);
 
         panel.add(formTitle);
         panel.add(Box.createVerticalStrut(8));
@@ -217,10 +175,7 @@ public class RentalReminderFrame extends JFrame {
 
         panel.add(Box.createVerticalStrut(22));
 
-        messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font(FONT_NAME, Font.BOLD, 14));
-        messageLabel.setForeground(RED);
-        messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        messageLabel = createStandardLabel(" ", Font.BOLD, 14, RED, Component.LEFT_ALIGNMENT);
         panel.add(messageLabel);
 
         return panel;
@@ -240,12 +195,40 @@ public class RentalReminderFrame extends JFrame {
         return panel;
     }
 
-    private JLabel createInputLabel(String text) {
+    private JPanel createFooter() {
+        JPanel footer = new JPanel();
+        footer.setBackground(new Color(248, 249, 250));
+        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
+
+        JLabel label = createStandardLabel("SB Car Rental Management System", Font.PLAIN, 13, TEXT_GRAY, Component.CENTER_ALIGNMENT);
+        footer.add(label);
+
+        return footer;
+    }
+
+    // --- Helper Methods ---
+
+    private JPanel createYBoxPanel() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        return panel;
+    }
+
+    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color, float alignmentX) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font(FONT_NAME, Font.BOLD, 15));
-        label.setForeground(TEXT_DARK);
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
+        label.setForeground(color);
+        label.setAlignmentX(alignmentX);
         return label;
+    }
+
+    private JLabel createRuleLabel(String text) {
+        return createStandardLabel("• " + text, Font.PLAIN, 14, TEXT_DARK, Component.LEFT_ALIGNMENT);
+    }
+
+    private JLabel createInputLabel(String text) {
+        return createStandardLabel(text, Font.BOLD, 15, TEXT_DARK, Component.LEFT_ALIGNMENT);
     }
 
     private JButton createButton(String text, Color color, int width, int height) {
@@ -298,18 +281,7 @@ public class RentalReminderFrame extends JFrame {
         return button;
     }
 
-    private JPanel createFooter() {
-        JPanel footer = new JPanel();
-        footer.setBackground(new Color(248, 249, 250));
-        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
-
-        JLabel label = new JLabel("SB Car Rental Management System");
-        label.setFont(new Font(FONT_NAME, Font.PLAIN, 13));
-        label.setForeground(TEXT_GRAY);
-
-        footer.add(label);
-        return footer;
-    }
+    // --- Logic & Events ---
 
     private void loadVehicles() {
         vehicleComboBox.removeAllItems();
@@ -381,6 +353,8 @@ public class RentalReminderFrame extends JFrame {
         messageLabel.setForeground(success ? GREEN : RED);
         messageLabel.setText(message);
     }
+
+    // --- Custom Renderers & UI Panels ---
 
     private static class VehicleRenderer extends DefaultListCellRenderer {
 

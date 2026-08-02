@@ -10,11 +10,15 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 /**
  * The ReturnVehicleFrame class provides the user
  * interface for returning rented vehicles.
  */
 public class ReturnVehicleFrame extends JFrame {
+
+    private static final String FONT_NAME = "Segoe UI";
+    private static final String TITLE_RETURN_VEHICLE = "Return Vehicle";
 
     private static final Color NAVY = new Color(18, 54, 82);
     private static final Color NAVY_LIGHT = new Color(35, 92, 132);
@@ -61,7 +65,7 @@ public class ReturnVehicleFrame extends JFrame {
     }
 
     private void initializeFrame() {
-        setTitle("Return Vehicle");
+        setTitle(TITLE_RETURN_VEHICLE);
         setSize(980, 650);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -73,17 +77,10 @@ public class ReturnVehicleFrame extends JFrame {
         header.setLayout(new BorderLayout());
         header.setBorder(new EmptyBorder(24, 36, 24, 36));
 
-        JPanel titlePanel = new JPanel();
-        titlePanel.setOpaque(false);
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        JPanel titlePanel = createYBoxPanel();
 
-        JLabel title = new JLabel("Return Vehicle");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 32));
-        title.setForeground(Color.WHITE);
-
-        JLabel subtitle = new JLabel("Complete a rental return and update the vehicle status");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        subtitle.setForeground(new Color(220, 235, 245));
+        JLabel title = createStandardLabel(TITLE_RETURN_VEHICLE, Font.BOLD, 32, Color.WHITE, Component.LEFT_ALIGNMENT);
+        JLabel subtitle = createStandardLabel("Complete a rental return and update the vehicle status", Font.PLAIN, 15, new Color(220, 235, 245), Component.LEFT_ALIGNMENT);
 
         titlePanel.add(title);
         titlePanel.add(Box.createVerticalStrut(5));
@@ -124,34 +121,19 @@ public class ReturnVehicleFrame extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(30, 28, 30, 28));
 
-        JLabel title = new JLabel("Return Summary");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        title.setForeground(NAVY);
-        title.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel subtitle = new JLabel("Select an active rental and complete the return.");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        subtitle.setForeground(TEXT_GRAY);
-        subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel title = createStandardLabel("Return Summary", Font.BOLD, 24, NAVY, Component.LEFT_ALIGNMENT);
+        JLabel subtitle = createStandardLabel("Select an active rental and complete the return.", Font.PLAIN, 14, TEXT_GRAY, Component.LEFT_ALIGNMENT);
 
         panel.add(title);
         panel.add(Box.createVerticalStrut(8));
         panel.add(subtitle);
         panel.add(Box.createVerticalStrut(28));
 
-        activeRentalsCountLabel = new JLabel("Active Rentals: 0");
-        activeRentalsCountLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        activeRentalsCountLabel.setForeground(GREEN);
-        activeRentalsCountLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        activeRentalsCountLabel = createStandardLabel("Active Rentals: 0", Font.BOLD, 18, GREEN, Component.LEFT_ALIGNMENT);
         panel.add(activeRentalsCountLabel);
         panel.add(Box.createVerticalStrut(26));
 
-        selectedRentalLabel = new JLabel("<html><b>Selected Rental:</b><br>No rental selected yet</html>");
-        selectedRentalLabel.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        selectedRentalLabel.setForeground(TEXT_DARK);
-        selectedRentalLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        selectedRentalLabel = createStandardLabel("<html><b>Selected Rental:</b><br>No rental selected yet</html>", Font.PLAIN, 15, TEXT_DARK, Component.LEFT_ALIGNMENT);
         panel.add(selectedRentalLabel);
         panel.add(Box.createVerticalStrut(28));
 
@@ -163,37 +145,17 @@ public class ReturnVehicleFrame extends JFrame {
 
         panel.add(Box.createVerticalGlue());
 
-        JLabel note = new JLabel("SB Car Rental");
-        note.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        note.setForeground(NAVY);
-        note.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel note = createStandardLabel("SB Car Rental", Font.BOLD, 15, NAVY, Component.LEFT_ALIGNMENT);
         panel.add(note);
 
         return panel;
     }
 
-    private JLabel createRuleLabel(String text) {
-        JLabel label = new JLabel("• " + text);
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        label.setForeground(TEXT_DARK);
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return label;
-    }
-
     private JPanel createFormPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JPanel panel = createYBoxPanel();
 
-        JLabel formTitle = new JLabel("Return Details");
-        formTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        formTitle.setForeground(TEXT_DARK);
-        formTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel formSubtitle = new JLabel("Choose the rental you want to return.");
-        formSubtitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        formSubtitle.setForeground(TEXT_GRAY);
-        formSubtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel formTitle = createStandardLabel("Return Details", Font.BOLD, 24, TEXT_DARK, Component.LEFT_ALIGNMENT);
+        JLabel formSubtitle = createStandardLabel("Choose the rental you want to return.", Font.PLAIN, 14, TEXT_GRAY, Component.LEFT_ALIGNMENT);
 
         panel.add(formTitle);
         panel.add(Box.createVerticalStrut(8));
@@ -206,7 +168,7 @@ public class ReturnVehicleFrame extends JFrame {
 
         rentalComboBox = new JComboBox<>();
         rentalComboBox.setMaximumSize(new Dimension(360, 44));
-        rentalComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        rentalComboBox.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         rentalComboBox.setBackground(Color.WHITE);
         rentalComboBox.setRenderer(new RentalRenderer());
         rentalComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -214,10 +176,7 @@ public class ReturnVehicleFrame extends JFrame {
 
         panel.add(Box.createVerticalStrut(22));
 
-        messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        messageLabel.setForeground(RED);
-        messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        messageLabel = createStandardLabel(" ", Font.BOLD, 14, RED, Component.LEFT_ALIGNMENT);
         panel.add(messageLabel);
 
         panel.add(Box.createVerticalStrut(18));
@@ -238,12 +197,40 @@ public class ReturnVehicleFrame extends JFrame {
         return panel;
     }
 
-    private JLabel createInputLabel(String text) {
+    private JPanel createFooter() {
+        JPanel footer = new JPanel();
+        footer.setBackground(new Color(248, 249, 250));
+        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
+
+        JLabel label = createStandardLabel("SB Car Rental Management System", Font.PLAIN, 13, TEXT_GRAY, Component.CENTER_ALIGNMENT);
+        footer.add(label);
+
+        return footer;
+    }
+
+    // --- Helper Methods ---
+
+    private JPanel createYBoxPanel() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        return panel;
+    }
+
+    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color, float alignmentX) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        label.setForeground(TEXT_DARK);
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
+        label.setForeground(color);
+        label.setAlignmentX(alignmentX);
         return label;
+    }
+
+    private JLabel createRuleLabel(String text) {
+        return createStandardLabel("• " + text, Font.PLAIN, 14, TEXT_DARK, Component.LEFT_ALIGNMENT);
+    }
+
+    private JLabel createInputLabel(String text) {
+        return createStandardLabel(text, Font.BOLD, 15, TEXT_DARK, Component.LEFT_ALIGNMENT);
     }
 
     private JButton createButton(String text, Color color, int width, int height) {
@@ -251,7 +238,7 @@ public class ReturnVehicleFrame extends JFrame {
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(color);
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 15));
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -271,18 +258,7 @@ public class ReturnVehicleFrame extends JFrame {
         return button;
     }
 
-    private JPanel createFooter() {
-        JPanel footer = new JPanel();
-        footer.setBackground(new Color(248, 249, 250));
-        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
-
-        JLabel label = new JLabel("SB Car Rental Management System");
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        label.setForeground(TEXT_GRAY);
-
-        footer.add(label);
-        return footer;
-    }
+    // --- Logic & Events ---
 
     private void loadRentals() {
         rentalComboBox.removeAllItems();
@@ -358,6 +334,8 @@ public class ReturnVehicleFrame extends JFrame {
         messageLabel.setText(message);
     }
 
+    // --- Custom Renderers & UI Panels ---
+
     private static class RentalRenderer extends DefaultListCellRenderer {
 
         @Override
@@ -383,7 +361,7 @@ public class ReturnVehicleFrame extends JFrame {
                 );
             }
 
-            setFont(new Font("Segoe UI", Font.PLAIN, 15));
+            setFont(new Font(FONT_NAME, Font.PLAIN, 15));
             return this;
         }
     }
