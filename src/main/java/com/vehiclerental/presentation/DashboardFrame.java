@@ -10,409 +10,346 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * The DashboardFrame class provides the main user
- * interface for accessing the vehicle rental
- * management system features.
+ * DashboardFrame is the primary navigation hub for the rental system.
  */
 public class DashboardFrame extends JFrame {
 
-    // Constants
-    private static final String FONT_NAME = "Segoe UI";
-    private static final String TITLE_APP = "SB CAR RENTAL";
+    // Global Style Constants
+    private static final String MAIN_FONT_FAMILY = "Segoe UI";
+    private static final String BRAND_TITLE = "SB CAR RENTAL";
 
-    private static final Color NAVY = new Color(18, 54, 82);
-    private static final Color NAVY_LIGHT = new Color(35, 92, 132);
-    private static final Color PAGE_BG = new Color(244, 248, 252);
-    private static final Color CARD_BG = Color.WHITE;
-    private static final Color TEXT_DARK = new Color(33, 37, 41);
-    private static final Color TEXT_GRAY = new Color(108, 117, 125);
-    private static final Color RED = new Color(214, 80, 80);
+    private static final Color DEEP_PRIMARY_NAVY = new Color(18, 54, 82);
+    private static final Color LIGHT_PRIMARY_NAVY = new Color(35, 92, 132);
+    private static final Color BACKGROUND_CANVAS = new Color(244, 248, 252);
+    private static final Color BASE_DARK_TEXT = new Color(33, 37, 41);
+    private static final Color BASE_MUTED_TEXT = new Color(108, 117, 125);
+    private static final Color LOGOUT_RED_COLOR = new Color(214, 80, 80);
 
-    private final transient VehicleService vehicleService =
-            new VehicleService(new VehicleRepository());
+    // Business Services
+    private final transient VehicleService fleetManagementService = new VehicleService(new VehicleRepository());
 
-    private JButton vehiclesButton;
-    private JButton rentButton;
-    private JButton returnButton;
-    private JButton billingButton;
-    private JButton reminderButton;
-    private JButton vehicleTypesButton;
-    private JButton logoutButton;
+    // Dynamic Display Counters
+    private JLabel activeFleetCountLbl;
+    private JLabel rentedFleetCountLbl;
+    private JLabel systemStatusStateLbl;
 
-    private JLabel availableVehiclesLabel;
-    private JLabel rentedVehiclesLabel;
-    private JLabel statusLabel;
+    // Navigation Triggers
+    private JButton navVehiclesBtn;
+    private JButton navRentBtn;
+    private JButton navReturnBtn;
+    private JButton navBillingBtn;
+    private JButton navTypesBtn;
+    private JButton navReminderBtn;
+    private JButton executeLogoutBtn;
 
     public DashboardFrame() {
-        initializeFrame();
-
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(PAGE_BG);
-
-        mainPanel.add(createHeader(), BorderLayout.NORTH);
-        mainPanel.add(createCenter(), BorderLayout.CENTER);
-        mainPanel.add(createFooter(), BorderLayout.SOUTH);
-
-        add(mainPanel);
-
-        initializeEvents();
-        refreshDashboard();
-
+        configureWindowProperties();
+        buildDashboardContent();
+        registerInteractionHandlers();
+        updateSystemOverviewMetrics();
         setVisible(true);
     }
 
-    private void initializeFrame() {
+    private void configureWindowProperties() {
         setTitle("SB Car Rental Dashboard");
         setSize(1100, 760);
         setLocationRelativeTo(null);
         setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    private JPanel createHeader() {
-        GradientPanel header = new GradientPanel(NAVY, NAVY_LIGHT);
-        header.setLayout(new BorderLayout());
-        header.setBorder(new EmptyBorder(24, 38, 24, 38));
+    private void buildDashboardContent() {
+        JPanel containerCanvas = new JPanel(new BorderLayout());
+        containerCanvas.setBackground(BACKGROUND_CANVAS);
 
-        JPanel titlePanel = createYBoxPanel();
+        containerCanvas.add(buildHeaderBanner(), BorderLayout.NORTH);
+        containerCanvas.add(buildCentralWorkspace(), BorderLayout.CENTER);
+        containerCanvas.add(buildFooterNotice(), BorderLayout.SOUTH);
 
-        JLabel title = createStandardLabel(TITLE_APP, Font.BOLD, 34, Color.WHITE, Component.LEFT_ALIGNMENT);
-        JLabel subtitle = createStandardLabel("Vehicle Rental Management System", Font.PLAIN, 15, new Color(220, 235, 245), Component.LEFT_ALIGNMENT);
-
-        titlePanel.add(title);
-        titlePanel.add(Box.createVerticalStrut(5));
-        titlePanel.add(subtitle);
-
-        header.add(titlePanel, BorderLayout.WEST);
-
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 8));
-        rightPanel.setOpaque(false);
-
-        JLabel admin = createStandardLabel("Administrator", Font.BOLD, 17, Color.WHITE, Component.CENTER_ALIGNMENT);
-        logoutButton = createHeaderButton("Logout");
-
-        rightPanel.add(admin);
-        rightPanel.add(logoutButton);
-
-        header.add(rightPanel, BorderLayout.EAST);
-
-        return header;
+        setContentPane(containerCanvas);
     }
 
-    private JPanel createCenter() {
-        JPanel center = new JPanel(new BorderLayout());
-        center.setBackground(PAGE_BG);
-        center.setBorder(new EmptyBorder(30, 42, 28, 42));
+    private JPanel buildHeaderBanner() {
+        JPanel headerPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setPaint(new GradientPaint(0, 0, DEEP_PRIMARY_NAVY, getWidth(), getHeight(), LIGHT_PRIMARY_NAVY));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        headerPanel.setBorder(new EmptyBorder(24, 38, 24, 38));
 
-        JPanel topPanel = createYBoxPanel();
+        JPanel brandingStack = new JPanel();
+        brandingStack.setOpaque(false);
+        brandingStack.setLayout(new BoxLayout(brandingStack, BoxLayout.Y_AXIS));
 
-        JLabel welcome = createStandardLabel("Welcome to SB Car Rental Dashboard", Font.BOLD, 30, TEXT_DARK, Component.CENTER_ALIGNMENT);
-        JLabel description = createStandardLabel("Manage vehicles, rentals, billing, reminders, and vehicle types.", Font.PLAIN, 16, TEXT_GRAY, Component.CENTER_ALIGNMENT);
+        JLabel brandHeading = createLabelElement(BRAND_TITLE, Font.BOLD, 34, Color.WHITE);
+        JLabel brandSubHeading = createLabelElement("Vehicle Rental Management System", Font.PLAIN, 15, new Color(220, 235, 245));
 
-        topPanel.add(welcome);
-        topPanel.add(Box.createVerticalStrut(8));
-        topPanel.add(description);
-        topPanel.add(Box.createVerticalStrut(28));
+        brandingStack.add(brandHeading);
+        brandingStack.add(Box.createVerticalStrut(5));
+        brandingStack.add(brandSubHeading);
 
-        center.add(topPanel, BorderLayout.NORTH);
+        JPanel accountControls = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 8));
+        accountControls.setOpaque(false);
 
-        JPanel cardsPanel = new JPanel(new GridLayout(2, 3, 22, 22));
-        cardsPanel.setOpaque(false);
+        JLabel userRoleTag = createLabelElement("Administrator", Font.BOLD, 17, Color.WHITE);
+        userRoleTag.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        vehiclesButton = createCard("View Vehicles", "Browse all vehicles and availability", new Color(65, 130, 190));
-        rentButton = createCard("Rent Vehicle", "Create a new rental transaction", new Color(78, 150, 120));
-        returnButton = createCard("Return Vehicle", "Return rented vehicles safely", new Color(210, 145, 80));
-        billingButton = createCard("Billing", "Calculate cost and late penalty", new Color(125, 105, 170));
-        vehicleTypesButton = createCard("Vehicle Types", "View vehicles by category", new Color(60, 145, 145));
-        reminderButton = createCard("Rental Reminder", "Send rental reminder messages", new Color(190, 90, 90));
+        executeLogoutBtn = createLogoutButton("Logout");
 
-        cardsPanel.add(vehiclesButton);
-        cardsPanel.add(rentButton);
-        cardsPanel.add(returnButton);
-        cardsPanel.add(billingButton);
-        cardsPanel.add(vehicleTypesButton);
-        cardsPanel.add(reminderButton);
+        accountControls.add(userRoleTag);
+        accountControls.add(executeLogoutBtn);
 
-        center.add(cardsPanel, BorderLayout.CENTER);
-        center.add(createInformationPanel(), BorderLayout.SOUTH);
+        headerPanel.add(brandingStack, BorderLayout.WEST);
+        headerPanel.add(accountControls, BorderLayout.EAST);
 
-        return center;
+        return headerPanel;
     }
 
-    private JPanel createInformationPanel() {
-        RoundedPanel panel = new RoundedPanel(24, Color.WHITE);
-        panel.setLayout(new GridLayout(1, 3, 20, 0));
-        panel.setBorder(new EmptyBorder(20, 24, 20, 24));
-        panel.setPreferredSize(new Dimension(1000, 115));
+    private JPanel buildCentralWorkspace() {
+        JPanel mainArea = new JPanel(new BorderLayout());
+        mainArea.setBackground(BACKGROUND_CANVAS);
+        mainArea.setBorder(new EmptyBorder(30, 42, 28, 42));
 
-        availableVehiclesLabel = createStandardLabel("0", Font.BOLD, 28, new Color(65, 130, 190), Component.CENTER_ALIGNMENT);
-        rentedVehiclesLabel = createStandardLabel("--", Font.BOLD, 28, new Color(210, 145, 80), Component.CENTER_ALIGNMENT);
-        statusLabel = createStandardLabel("Online", Font.BOLD, 28, new Color(78, 150, 120), Component.CENTER_ALIGNMENT);
+        JPanel heroSection = new JPanel();
+        heroSection.setOpaque(false);
+        heroSection.setLayout(new BoxLayout(heroSection, BoxLayout.Y_AXIS));
 
-        panel.add(createInfoCard("Available Vehicles", availableVehiclesLabel));
-        panel.add(createInfoCard("Rented Vehicles", rentedVehiclesLabel));
-        panel.add(createInfoCard("System Status", statusLabel));
+        JLabel welcomeText = createLabelElement("Welcome to SB Car Rental Dashboard", Font.BOLD, 30, BASE_DARK_TEXT);
+        welcomeText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        return panel;
+        JLabel subtitleText = createLabelElement("Manage vehicles, rentals, billing, reminders, and vehicle types.", Font.PLAIN, 16, BASE_MUTED_TEXT);
+        subtitleText.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        heroSection.add(welcomeText);
+        heroSection.add(Box.createVerticalStrut(8));
+        heroSection.add(subtitleText);
+        heroSection.add(Box.createVerticalStrut(28));
+
+        mainArea.add(heroSection, BorderLayout.NORTH);
+        mainArea.add(buildFeatureGrid(), BorderLayout.CENTER);
+        mainArea.add(buildSystemStatusPanel(), BorderLayout.SOUTH);
+
+        return mainArea;
     }
 
-    private JPanel createInfoCard(String title, JLabel valueLabel) {
-        JPanel panel = createYBoxPanel();
+    private JPanel buildFeatureGrid() {
+        JPanel gridLayout = new JPanel(new GridLayout(2, 3, 22, 22));
+        gridLayout.setOpaque(false);
 
-        JLabel titleLabel = createStandardLabel(title, Font.PLAIN, 15, TEXT_GRAY, Component.CENTER_ALIGNMENT);
+        navVehiclesBtn = createNavigationTile("View Vehicles", "Browse all vehicles and availability", new Color(65, 130, 190));
+        navRentBtn = createNavigationTile("Rent Vehicle", "Create a new rental transaction", new Color(78, 150, 120));
+        navReturnBtn = createNavigationTile("Return Vehicle", "Return rented vehicles safely", new Color(210, 145, 80));
+        navBillingBtn = createNavigationTile("Billing", "Calculate cost and late penalty", new Color(125, 105, 170));
+        navTypesBtn = createNavigationTile("Vehicle Types", "View vehicles by category", new Color(60, 145, 145));
+        navReminderBtn = createNavigationTile("Rental Reminder", "Send rental reminder messages", new Color(190, 90, 90));
 
-        panel.add(Box.createVerticalGlue());
-        panel.add(titleLabel);
-        panel.add(Box.createVerticalStrut(8));
-        panel.add(valueLabel);
-        panel.add(Box.createVerticalGlue());
+        gridLayout.add(navVehiclesBtn);
+        gridLayout.add(navRentBtn);
+        gridLayout.add(navReturnBtn);
+        gridLayout.add(navBillingBtn);
+        gridLayout.add(navTypesBtn);
+        gridLayout.add(navReminderBtn);
 
-        return panel;
+        return gridLayout;
     }
 
-    private JPanel createFooter() {
-        JPanel footerPanel = new JPanel();
-        footerPanel.setBackground(new Color(248, 249, 250));
-        footerPanel.setBorder(new EmptyBorder(12, 0, 12, 0));
+    private JPanel buildSystemStatusPanel() {
+        JPanel summaryCard = new JPanel(new GridLayout(1, 3, 20, 0)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(0, 0, 0, 15));
+                g2.fillRoundRect(6, 6, getWidth() - 12, getHeight() - 12, 24, 24);
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(0, 0, getWidth() - 12, getHeight() - 12, 24, 24);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        summaryCard.setOpaque(false);
+        summaryCard.setBorder(new EmptyBorder(20, 24, 20, 24));
+        summaryCard.setPreferredSize(new Dimension(1000, 115));
 
-        JLabel footer = createStandardLabel("© 2026 SB Car Rental - Vehicle Rental Management System", Font.PLAIN, 13, TEXT_GRAY, Component.CENTER_ALIGNMENT);
-        footerPanel.add(footer);
+        activeFleetCountLbl = createLabelElement("0", Font.BOLD, 28, new Color(65, 130, 190));
+        activeFleetCountLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        return footerPanel;
+        rentedFleetCountLbl = createLabelElement("--", Font.BOLD, 28, new Color(210, 145, 80));
+        rentedFleetCountLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        systemStatusStateLbl = createLabelElement("Online", Font.BOLD, 28, new Color(78, 150, 120));
+        systemStatusStateLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        summaryCard.add(createMetricDisplayCell("Available Vehicles", activeFleetCountLbl));
+        summaryCard.add(createMetricDisplayCell("Rented Vehicles", rentedFleetCountLbl));
+        summaryCard.add(createMetricDisplayCell("System Status", systemStatusStateLbl));
+
+        return summaryCard;
     }
 
-    // --- Helper UI Methods ---
+    private JPanel createMetricDisplayCell(String caption, JLabel valDisplay) {
+        JPanel cell = new JPanel();
+        cell.setOpaque(false);
+        cell.setLayout(new BoxLayout(cell, BoxLayout.Y_AXIS));
 
-    private JPanel createYBoxPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        return panel;
+        JLabel title = createLabelElement(caption, Font.PLAIN, 15, BASE_MUTED_TEXT);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        cell.add(Box.createVerticalGlue());
+        cell.add(title);
+        cell.add(Box.createVerticalStrut(8));
+        cell.add(valDisplay);
+        cell.add(Box.createVerticalGlue());
+
+        return cell;
     }
 
-    private JLabel createStandardLabel(String text, int fontStyle, int fontSize, Color color, float alignmentX) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font(FONT_NAME, fontStyle, fontSize));
-        label.setForeground(color);
-        label.setAlignmentX(alignmentX);
-        return label;
+    private JPanel buildFooterNotice() {
+        JPanel footer = new JPanel();
+        footer.setBackground(new Color(248, 249, 250));
+        footer.setBorder(new EmptyBorder(12, 0, 12, 0));
+
+        JLabel copyrightText = createLabelElement("© 2026 SB Car Rental - Vehicle Rental Management System", Font.PLAIN, 13, BASE_MUTED_TEXT);
+        copyrightText.setAlignmentX(Component.CENTER_ALIGNMENT);
+        footer.add(copyrightText);
+
+        return footer;
     }
 
-    private JButton createCard(String title, String description, Color accentColor) {
-        CardButton button = new CardButton(accentColor);
-        button.setText(
-                "<html><center>"
-                        + "<span style='font-size:20px;'><b>" + title + "</b></span>"
-                        + "<br><br>"
-                        + "<span style='font-size:12px; color:#6c757d;'>" + description + "</span>"
-                        + "</center></html>"
-        );
+    // --- Component Generators ---
 
-        button.setFont(new Font(FONT_NAME, Font.PLAIN, 16));
-        button.setForeground(TEXT_DARK);
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setBorder(new EmptyBorder(20, 20, 20, 20));
-
-        return button;
+    private JLabel createLabelElement(String text, int style, int size, Color color) {
+        JLabel lbl = new JLabel(text);
+        lbl.setFont(new Font(MAIN_FONT_FAMILY, style, size));
+        lbl.setForeground(color);
+        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return lbl;
     }
 
-    private JButton createHeaderButton(String text) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(115, 42));
-        button.setBackground(RED);
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font(FONT_NAME, Font.BOLD, 15));
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    private JButton createNavigationTile(String headerText, String bodyText, Color themeAccent) {
+        JButton tileBtn = new JButton() {
+            private boolean isHovered = false;
 
-        button.addMouseListener(new MouseAdapter() {
+            {
+                addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        isHovered = true;
+                        repaint();
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        isHovered = false;
+                        repaint();
+                    }
+                });
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                int x = 4;
+                int y = 4;
+                int w = getWidth() - 10;
+                int h = getHeight() - 10;
+
+                g2.setColor(new Color(0, 0, 0, 18));
+                g2.fillRoundRect(x + 4, y + 5, w, h, 24, 24);
+
+                g2.setColor(isHovered ? new Color(250, 252, 255) : Color.WHITE);
+                g2.fillRoundRect(x, y, w, h, 24, 24);
+
+                g2.setColor(new Color(220, 230, 240));
+                g2.drawRoundRect(x, y, w, h, 24, 24);
+
+                g2.setColor(themeAccent);
+                g2.fillRoundRect(x, y, w, 8, 24, 24);
+                g2.fillRect(x, y + 5, w, 5);
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        tileBtn.setText(String.format("<html><center><span style='font-size:20px;'><b>%s</b></span><br><br><span style='font-size:12px; color:#6c757d;'>%s</span></center></html>", headerText, bodyText));
+        tileBtn.setFont(new Font(MAIN_FONT_FAMILY, Font.PLAIN, 16));
+        tileBtn.setForeground(BASE_DARK_TEXT);
+        tileBtn.setFocusPainted(false);
+        tileBtn.setOpaque(false);
+        tileBtn.setContentAreaFilled(false);
+        tileBtn.setBorderPainted(false);
+        tileBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        tileBtn.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        return tileBtn;
+    }
+
+    private JButton createLogoutButton(String label) {
+        JButton btn = new JButton(label);
+        btn.setPreferredSize(new Dimension(115, 42));
+        btn.setBackground(LOGOUT_RED_COLOR);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font(MAIN_FONT_FAMILY, Font.BOLD, 15));
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        btn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                button.setBackground(RED.darker());
+                btn.setBackground(LOGOUT_RED_COLOR.darker());
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(RED);
+                btn.setBackground(LOGOUT_RED_COLOR);
             }
         });
 
-        return button;
+        return btn;
     }
 
-    // --- Logic & Events ---
+    // --- State & Event Management ---
 
-    private void refreshDashboard() {
-        int availableVehicles = vehicleService.getAvailableVehicles().size();
-        availableVehiclesLabel.setText(String.valueOf(availableVehicles));
-        rentedVehiclesLabel.setText("--");
-        statusLabel.setText("Online");
+    private void updateSystemOverviewMetrics() {
+        int count = fleetManagementService.getAvailableVehicles().size();
+        activeFleetCountLbl.setText(String.valueOf(count));
+        rentedFleetCountLbl.setText("--");
+        systemStatusStateLbl.setText("Online");
     }
 
-    private void initializeEvents() {
-        logoutButton.addActionListener(e -> {
-            int option = JOptionPane.showConfirmDialog(
+    private void registerInteractionHandlers() {
+        executeLogoutBtn.addActionListener(e -> {
+            int userChoice = JOptionPane.showConfirmDialog(
                     this,
                     "Are you sure you want to logout?",
                     "Logout",
                     JOptionPane.YES_NO_OPTION
             );
 
-            if (option == JOptionPane.YES_OPTION) {
+            if (userChoice == JOptionPane.YES_OPTION) {
                 dispose();
                 new LoginFrame();
             }
         });
 
-        vehiclesButton.addActionListener(e -> {
-            dispose();
-            new ViewVehiclesFrame();
-        });
-
-        rentButton.addActionListener(e -> {
-            dispose();
-            new RentVehicleFrame();
-        });
-
-        returnButton.addActionListener(e -> {
-            dispose();
-            new ReturnVehicleFrame();
-        });
-
-        billingButton.addActionListener(e -> {
-            dispose();
-            new BillingFrame();
-        });
-
-        vehicleTypesButton.addActionListener(e -> {
-            dispose();
-            new VehicleTypesFrame();
-        });
-
-        reminderButton.addActionListener(e -> {
-            dispose();
-            new RentalReminderFrame();
-        });
+        navVehiclesBtn.addActionListener(e -> navigateToScreen(new ViewVehiclesFrame()));
+        navRentBtn.addActionListener(e -> navigateToScreen(new RentVehicleFrame()));
+        navReturnBtn.addActionListener(e -> navigateToScreen(new ReturnVehicleFrame()));
+        navBillingBtn.addActionListener(e -> navigateToScreen(new BillingFrame()));
+        navTypesBtn.addActionListener(e -> navigateToScreen(new VehicleTypesFrame()));
+        navReminderBtn.addActionListener(e -> navigateToScreen(new RentalReminderFrame()));
     }
 
-    // --- Custom UI Components ---
-
-    private static class CardButton extends JButton {
-
-        private final Color accentColor;
-        private boolean hover;
-
-        public CardButton(Color accentColor) {
-            this.accentColor = accentColor;
-            setOpaque(false);
-            setContentAreaFilled(false);
-            setBorderPainted(false);
-
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    hover = true;
-                    repaint();
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    hover = false;
-                    repaint();
-                }
-            });
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
-            int x = 4;
-            int y = 4;
-            int width = getWidth() - 10;
-            int height = getHeight() - 10;
-
-            g2.setColor(new Color(0, 0, 0, 18));
-            g2.fillRoundRect(x + 4, y + 5, width, height, 24, 24);
-
-            g2.setColor(hover ? new Color(250, 252, 255) : CARD_BG);
-            g2.fillRoundRect(x, y, width, height, 24, 24);
-
-            g2.setColor(new Color(220, 230, 240));
-            g2.drawRoundRect(x, y, width, height, 24, 24);
-
-            g2.setColor(accentColor);
-            g2.fillRoundRect(x, y, width, 8, 24, 24);
-            g2.fillRect(x, y + 5, width, 5);
-
-            g2.dispose();
-
-            super.paintComponent(g);
-        }
-    }
-
-    private static class RoundedPanel extends JPanel {
-
-        private final int radius;
-        private final Color backgroundColor;
-
-        public RoundedPanel(int radius, Color backgroundColor) {
-            this.radius = radius;
-            this.backgroundColor = backgroundColor;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
-            g2.setColor(new Color(0, 0, 0, 15));
-            g2.fillRoundRect(6, 6, getWidth() - 12, getHeight() - 12, radius, radius);
-
-            g2.setColor(backgroundColor);
-            g2.fillRoundRect(0, 0, getWidth() - 12, getHeight() - 12, radius, radius);
-
-            g2.dispose();
-
-            super.paintComponent(g);
-        }
-    }
-
-    private static class GradientPanel extends JPanel {
-
-        private final Color startColor;
-        private final Color endColor;
-
-        public GradientPanel(Color startColor, Color endColor) {
-            this.startColor = startColor;
-            this.endColor = endColor;
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            Graphics2D g2 = (Graphics2D) g;
-
-            GradientPaint gradient = new GradientPaint(
-                    0, 0, startColor,
-                    getWidth(), getHeight(), endColor
-            );
-
-            g2.setPaint(gradient);
-            g2.fillRect(0, 0, getWidth(), getHeight());
-        }
+    private void navigateToScreen(JFrame frame) {
+        dispose();
+        frame.setVisible(true);
     }
 }
