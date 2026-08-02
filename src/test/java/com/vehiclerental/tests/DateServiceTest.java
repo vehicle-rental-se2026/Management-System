@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class DateServiceTest {
+ class DateServiceTest {
 
     @Test
     void testCurrentDateMock() {

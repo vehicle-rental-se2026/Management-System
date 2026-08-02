@@ -8,8 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-public class RentalServiceTest {
+ class RentalServiceTest {
 
     private RentalService rentalService;
     private Car car;

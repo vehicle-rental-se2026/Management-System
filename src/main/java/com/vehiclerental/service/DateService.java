@@ -1,6 +1,8 @@
 package com.vehiclerental.service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+
 /**
  * The DateService class provides date-related
  * operations used by the rental system.
@@ -8,7 +10,7 @@ import java.time.LocalDate;
 public class DateService {
 
     public LocalDate getCurrentDate() {
-        return LocalDate.now();
+        return LocalDate.now(ZoneId.systemDefault());
     }
 
 }

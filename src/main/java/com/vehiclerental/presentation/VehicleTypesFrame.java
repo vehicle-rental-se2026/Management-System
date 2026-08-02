@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 /**
  * The VehicleTypesFrame class provides the user
  * interface for viewing vehicle types.
@@ -29,7 +30,6 @@ public class VehicleTypesFrame extends JFrame {
     private static final Color ORANGE = new Color(210, 145, 80);
     private static final Color RED = new Color(214, 80, 80);
 
-    private JTable table;
     private DefaultTableModel model;
 
     private JButton backButton;
@@ -178,7 +178,7 @@ public class VehicleTypesFrame extends JFrame {
             }
         };
 
-        table = new JTable(model);
+        JTable table = new JTable(model);
         table.setRowHeight(38);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         table.setForeground(TEXT_DARK);
@@ -299,7 +299,6 @@ public class VehicleTypesFrame extends JFrame {
     }
 
     private static class RoundedPanel extends JPanel {
-
         private final int radius;
         private final Color backgroundColor;
 
@@ -331,7 +330,6 @@ public class VehicleTypesFrame extends JFrame {
     }
 
     private static class GradientPanel extends JPanel {
-
         private final Color startColor;
         private final Color endColor;
 

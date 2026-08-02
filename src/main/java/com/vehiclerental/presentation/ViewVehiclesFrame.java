@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+
 /**
  * The ViewVehiclesFrame class provides the user
  * interface for displaying all available vehicles.
@@ -28,7 +29,6 @@ public class ViewVehiclesFrame extends JFrame {
     private static final Color RED = new Color(214, 80, 80);
     private static final Color GREEN = new Color(78, 150, 120);
 
-    private JTable table;
     private DefaultTableModel model;
 
     private JButton refreshButton;
@@ -173,7 +173,7 @@ public class ViewVehiclesFrame extends JFrame {
             }
         };
 
-        table = new JTable(model);
+        JTable table = new JTable(model);
         table.setRowHeight(38);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         table.setForeground(TEXT_DARK);

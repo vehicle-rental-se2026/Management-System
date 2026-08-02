@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-public class NotificationServiceTest {
+ class NotificationServiceTest {
 
     @Test
     void testSendReminder() {

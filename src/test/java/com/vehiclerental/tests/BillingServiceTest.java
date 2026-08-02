@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BillingServiceTest {
+ class BillingServiceTest {
 
     @Test
-    public void testCalculateRentalCost() {
+void testCalculateRentalCost() {
 
         BillingService billingService = new BillingService();
 
@@ -18,7 +18,7 @@ public class BillingServiceTest {
     }
 
     @Test
-    public void testCalculateRentalCostOneDay() {
+   void testCalculateRentalCostOneDay() {
 
         BillingService billingService = new BillingService();
 
@@ -29,7 +29,7 @@ public class BillingServiceTest {
     }
 
     @Test
-    public void testCalculateLatePenalty() {
+   void testCalculateLatePenalty() {
 
         BillingService billingService = new BillingService();
 
@@ -40,7 +40,7 @@ public class BillingServiceTest {
     }
 
     @Test
-    public void testCalculateLatePenaltyZeroDays() {
+void testCalculateLatePenaltyZeroDays() {
 
         BillingService billingService = new BillingService();
 
@@ -51,7 +51,7 @@ public class BillingServiceTest {
     }
 
     @Test
-    public void testCalculateLatePenaltyNegativeDays() {
+    void testCalculateLatePenaltyNegativeDays() {
 
         BillingService billingService = new BillingService();
 
@@ -62,7 +62,7 @@ public class BillingServiceTest {
     }
 
     @Test
-    public void testCalculateTotal() {
+  void testCalculateTotal() {
 
         BillingService billingService = new BillingService();
 
